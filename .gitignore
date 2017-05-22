@@ -28,3 +28,10 @@ node_modules
 
 # Bower
 bower_components/
+
+# Config
+src/config.json
+
+# Dist
+dist/
+

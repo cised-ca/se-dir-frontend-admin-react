@@ -1,0 +1,29 @@
+.login-page {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-form {
+  background: #fff;
+  border-radius: 5px;
+  min-width: 400px;
+  text-align: center;
+}
+
+.login-form__title {
+  background: #00aa51;
+  border-radius: 5px 5px 0 0;
+  color: #fff;
+  margin: 0;
+  padding: 8px 0;
+}
+
+.login-form__content {
+  border: 1px solid #ddd;
+  border-radius: 0 0 5px 5px;
+  padding: 8px 0;
+}
+

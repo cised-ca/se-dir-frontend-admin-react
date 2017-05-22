@@ -1,0 +1,14 @@
+.status-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+  .status-list-item {
+    border-bottom: 1px solid #000;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+}
+
