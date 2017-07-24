@@ -18,14 +18,59 @@
     margin-top: 10px;
     padding: 8px;
     width: 90%;
-
-    &[type="submit"] {
-      margin: 0;
-      width: auto;
-    }
   }
 
   textarea {
     min-height: 100px;
+  }
+}
+
+.button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.button--default {
+  background-color: #eaebed;
+  border-color: #dcdee1;
+  color: #335075;
+
+  &:hover {
+    background-color: #cfd1d5;
+    border-color: #bbbfc5;
+  }
+}
+
+.button--primary {
+  background-color: #337ab7;
+  border: 1px solid #2e6da4;
+  color: #fff;
+
+  &:hover {
+    background-color: #286090;
+    border-color: #204d74;
+  }
+}
+
+.button--destructive {
+  background-color: #d9534f;
+  border: 1px solid #d43f3a;
+  color: #fff;
+
+  &:hover {
+    background-color: #c9302c;
+    border-color: #ac2925;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  input {
+    &[type="submit"],
+    &[type="button"] {
+      display: inline-block;
+      margin-right: 10px;
+      width: auto;
+    }
   }
 }

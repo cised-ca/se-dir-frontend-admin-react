@@ -11,12 +11,43 @@ class EnterpriseDetailsPanelComponent extends React.Component {
     this.state = props.enterprise;
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmitForm = this.handleSubmitForm.bind(this);
+    this.handleDeleteEnterprise = this.handleDeleteEnterprise.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.enterprise.name !== this.props.enterprise.name) {
       this.setState(nextProps.enterprise);
     }
+  }
+
+  handleCancel(event) {
+    event.preventDefault();
+
+    this.props.setActivePanel(2);
+  }
+
+  handleDeleteEnterprise(event) {
+      // TODO: "Are you sure" modal
+
+      event.preventDefault();
+
+      const enterprise = this.state;
+      const endpoint = this.context.config.api_root + '/enterprise/' + enterprise.id;
+
+      const request = new Request(endpoint, {
+        method: 'DELETE'
+      });
+
+      fetch(request)
+        .then((response) => {
+          // TODO: Display success
+          // TODO: Refresh list of enterprises
+          // TODO: Set active panel to the enterprise list
+        })
+        .catch((error) => {
+          // TODO: Display error
+        });
   }
 
   handleSubmitForm(event) {
@@ -142,7 +173,15 @@ class EnterpriseDetailsPanelComponent extends React.Component {
               value={enterprise.twitter} />
           </label>
 
-          <input type="submit" value="Save" />
+          <input className="button button--primary" type="submit" value="Save" />
+
+          <input className="button button--destructive" name="delete"
+            onClick={this.handleDeleteEnterprise}
+            type="button" value="Delete" />
+
+          <input className="button button--default" name="cancel"
+            onClick={this.handleCancel}
+            type="button" value="Cancel" />
         </form>
       </div>
     );

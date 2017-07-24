@@ -9,11 +9,6 @@ import EnterpriseDetailsPanel from './EnterpriseDetailsPanelComponent';
 require('styles/panels/PanelList.scss');
 
 class PanelListComponent extends React.Component {
-/*  handleStatusClick(enterprises) {
-    // Pass this up to the Dashboard component
-    this.props.handleStatusClick(enterprises);
-  }*/
-
   constructor(props) {
     super(props);
 
@@ -21,6 +16,12 @@ class PanelListComponent extends React.Component {
       activePanel: 1,
       enterpriseDetails: null
     };
+  }
+
+  setActivePanel(activePanel) {
+    this.setState({
+      activePanel: activePanel
+    });
   }
 
   handleStatusClick(enterprises) {
@@ -51,7 +52,9 @@ class PanelListComponent extends React.Component {
     }
 
     if (activePanel >= 3) {
-      jsx.push(<EnterpriseDetailsPanel key="enterprise-details" enterprise={this.state.enterpriseDetails} />);
+      jsx.push(<EnterpriseDetailsPanel key="enterprise-details"
+        setActivePanel={this.setActivePanel.bind(this)}
+        enterprise={this.state.enterpriseDetails} />);
     }
 
     return jsx;
