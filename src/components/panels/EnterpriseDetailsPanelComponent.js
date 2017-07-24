@@ -64,7 +64,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
 
     // TODO: Add missing fields
     return (
-      <div className="enterprisedetailspanel-component">
+      <div className="panel panel--wide enterprisedetailspanel-component">
         <h1>{enterprise.name}</h1>
 
         <form onSubmit={this.handleSubmitForm}>
@@ -73,6 +73,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
             <input
               name="name"
               onChange={this.handleInputChange}
+              required
               value={enterprise.name} />
           </label>
 
@@ -86,7 +87,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
 
           <label>
             Description:
-            <input
+            <textarea
               name="description"
               onChange={this.handleInputChange}
               value={enterprise.description} />
@@ -113,6 +114,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
             <input
               name="website"
               onChange={this.handleInputChange}
+              type="url"
               value={enterprise.website} />
           </label>
 

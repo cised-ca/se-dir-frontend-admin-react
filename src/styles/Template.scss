@@ -1,11 +1,12 @@
-.template {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
+@media only screen and (min-width: 768px) {
+  .template {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 
-.template__main {
-  display: flex;
-  flex: 1;
+  .template__main {
+    display: flex;
+    flex: 1;
+  }
 }
-

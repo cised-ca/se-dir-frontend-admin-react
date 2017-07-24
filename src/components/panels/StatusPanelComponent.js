@@ -2,7 +2,6 @@
 
 import React from 'react';
 
-import Panel from '../PanelComponent';
 import StatusList from '../StatusListComponent';
 import Status from '../StatusComponent';
 
@@ -21,14 +20,12 @@ class StatusPanelComponent extends React.Component {
     const unpublished = enterprises.unpublished;
 
     return (
-      <div className="statuspanel-component">
-        <Panel>
-          <StatusList handleStatusClick={this.handleStatusClick.bind(this)}>
-            <Status name="Published" enterprises={published} />
-            <Status name="Pending" enterprises={pending} />
-            <Status name="Unpublished" enterprises={unpublished} />
-          </StatusList>
-        </Panel>
+      <div className="panel statuspanel-component">
+        <StatusList handleStatusClick={this.handleStatusClick.bind(this)}>
+          <Status name="Published" enterprises={published} />
+          <Status name="Pending" enterprises={pending} />
+          <Status name="Unpublished" enterprises={unpublished} />
+        </StatusList>
       </div>
     );
   }
@@ -37,4 +34,3 @@ class StatusPanelComponent extends React.Component {
 StatusPanelComponent.displayName = 'PanelsStatusPanelComponent';
 
 export default StatusPanelComponent;
-

@@ -38,7 +38,7 @@ class EnterpriseListPanelComponent extends React.Component {
     });
 
     return (
-      <div className="enterpriselistpanel-component">
+      <div className="panel enterpriselistpanel-component">
         <ul>
           {jsx}
         </ul>

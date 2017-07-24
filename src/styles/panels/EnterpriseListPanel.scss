@@ -1,3 +1,19 @@
 .enterpriselistpanel-component {
-  border: 1px dashed #f00;
+  border-right: 1px solid #000;
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    border-bottom: 1px solid #000;
+    cursor: pointer;
+    padding: 10px 8px;
+
+    &:hover {
+        background-color: #ddd;
+    }
+  }
 }
