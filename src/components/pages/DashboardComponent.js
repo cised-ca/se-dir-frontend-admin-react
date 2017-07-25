@@ -12,8 +12,11 @@ class DashboardComponent extends React.Component {
     super(props);
 
     this.state = {
-      activePanel: 1
+      activePanel: 1,
+      enterpriseStatuses: null
     };
+
+    this.refreshData = this.refreshData.bind(this);
   }
 
   getEnterpriseStatuses() {
@@ -36,7 +39,22 @@ class DashboardComponent extends React.Component {
       });
   }
 
+  refreshData() {
+    // FIXME: dupe [1]
+    this.getEnterpriseStatuses()
+      .then((enterpriseStatuses) => {
+        this.setState({
+          enterpriseStatuses: enterpriseStatuses
+        });
+      })
+      .catch((err) => {
+        // TODO: display error
+        this.context.logger.notify('refresh data fail...: ' + err);
+      });
+  }
+
   componentDidMount() {
+    // FIXME: dupe [1]
     this.getEnterpriseStatuses()
       .then((enterpriseStatuses) => {
         this.setState({
@@ -65,7 +83,7 @@ class DashboardComponent extends React.Component {
       <div className="dashboard-component">
         <PanelList activePanel={this.state.activePanel}
           enterpriseStatuses={this.state.enterpriseStatuses}
-          displayEnterprises={this.state.enterprises} />
+          refreshData={this.refreshData} />
       </div>
     );
   }

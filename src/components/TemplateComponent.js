@@ -22,9 +22,8 @@ class TemplateComponent extends React.Component {
     this.state = {
       config: {},
       logger: {
-        /* eslint-disable no-console */
+        // eslint-disable-next-line no-console
         notify: function(msg) { console.error(msg); }
-        /* eslint-enable no-console */
       }
     };
   }

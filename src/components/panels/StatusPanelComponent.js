@@ -8,23 +8,30 @@ import Status from '../StatusComponent';
 require('styles/panels/StatusPanel.scss');
 
 class StatusPanelComponent extends React.Component {
-  handleStatusClick(enterprises) {
+  constructor(props) {
+    super(props);
+
+    this.state = props.enterpriseStatuses;
+
+    this.handleStatusClick = this.handleStatusClick.bind(this);
+  }
+
+  handleStatusClick(enterprises, status) {
     // Pass this up to the PanelList component
-    this.props.handleStatusClick(enterprises);
+    this.props.handleStatusClick(enterprises, status);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState(nextProps.enterpriseStatuses);
   }
 
   render() {
-    const enterprises = this.props.enterpriseStatuses;
-    const published = enterprises.published;
-    const pending = enterprises.pending;
-    const unpublished = enterprises.unpublished;
-
     return (
       <div className="panel statuspanel-component">
-        <StatusList handleStatusClick={this.handleStatusClick.bind(this)}>
-          <Status name="Published" enterprises={published} />
-          <Status name="Pending" enterprises={pending} />
-          <Status name="Unpublished" enterprises={unpublished} />
+        <StatusList handleStatusClick={this.handleStatusClick}>
+          <Status name="Published" enterprises={this.state.published} />
+          <Status name="Pending" enterprises={this.state.pending} />
+          <Status name="Unpublished" enterprises={this.state.unpublished} />
         </StatusList>
       </div>
     );

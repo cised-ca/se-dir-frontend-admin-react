@@ -5,9 +5,15 @@ import React from 'react';
 require('styles/StatusList.scss');
 
 class StatusListComponent extends React.Component {
-  handleStatusClick(status) {
+  constructor(props) {
+    super(props);
+
+    this.handleStatusClick = this.handleStatusClick.bind(this);
+  }
+
+  handleStatusClick(enterprises, status) {
     // Pass this up to the StatusPanel component
-    this.props.handleStatusClick(status);
+    this.props.handleStatusClick(enterprises, status);
   }
 
   render() {
@@ -21,7 +27,7 @@ class StatusListComponent extends React.Component {
             status => {
               return (
                 <li className="status-list-item">
-                  {React.cloneElement(status, {onStatusClick: this.handleStatusClick.bind(this)})}
+                  {React.cloneElement(status, {onStatusClick: this.handleStatusClick})}
                 </li>
               );
             }

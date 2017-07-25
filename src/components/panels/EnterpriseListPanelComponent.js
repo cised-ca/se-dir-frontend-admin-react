@@ -5,18 +5,25 @@ import React from 'react';
 require('styles/panels/EnterpriseListPanel.scss');
 
 class EnterpriseListPanelComponent extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      enterprises: props.enterprises,
+      status: props.status
+    };
+  }
 
   getEnterpriseDetails(enterpriseId) {
     const api_root = this.context.config.api_root;
-    const component = this;
 
     fetch(api_root + '/enterprise/' + enterpriseId)
       .then((response) => {
         return response
           .json()
-          .then(function(json) {
+          .then((enterprise_details) => {
             // Pass this up to PanelListComponent
-            component.props.handleEnterpriseClick(json);
+            this.props.handleEnterpriseClick(enterprise_details);
           });
       })
       .catch((error) => {
@@ -24,14 +31,24 @@ class EnterpriseListPanelComponent extends React.Component {
       });
   }
 
+  componentWillReceiveProps(nextProps) {
+    const next_enterprises = nextProps.enterprises;
+    const curr_enterprises = this.state.enterprises;
+
+    if (next_enterprises.length !== curr_enterprises.length) {
+      this.setState({
+        enterprises: next_enterprises
+      });
+    }
+  }
+
   render() {
     let jsx = [];
-    const component = this;
-    const enterprises = this.props.enterprises;
+    const enterprises = this.state.enterprises;
 
-    enterprises.map(function(enterprise) {
+    enterprises.map((enterprise) => {
       jsx.push(
-        <li key={enterprise.id} onClick={component.getEnterpriseDetails.bind(component, enterprise.id)}>
+        <li key={enterprise.id} onClick={this.getEnterpriseDetails.bind(this, enterprise.id)}>
           {enterprise.name}
         </li>
       );
@@ -53,9 +70,5 @@ EnterpriseListPanelComponent.contextTypes = {
   'config': React.PropTypes.object,
   'logger': React.PropTypes.object
 };
-
-// Uncomment properties you need
-// EnterpriseListPanelComponent.propTypes = {};
-// EnterpriseListPanelComponent.defaultProps = {};
 
 export default EnterpriseListPanelComponent;

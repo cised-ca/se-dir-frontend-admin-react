@@ -5,17 +5,37 @@ import React from 'react';
 require('styles/Status.scss');
 
 class StatusComponent extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      name: props.name,
+      count: props.enterprises.length
+    }
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
   handleClick() {
-    this.props.onStatusClick(this.props.enterprises);
+    // Pass this up to StatusList component
+    this.props.onStatusClick(this.props.enterprises, this.state.name);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const count = nextProps.enterprises.length;
+
+    if (count !== this.state.count) {
+      this.setState({
+        count: count
+      });
+    }
   }
 
   render() {
-    const count = this.props.enterprises.length;
-
     return (
-      <div className="status-component status" onClick={this.handleClick.bind(this)}>
-        <span className="name">{this.props.name}</span>&nbsp;
-        (<span className="count">{this.props.enterprises.length}</span>)
+      <div className="status-component status" onClick={this.handleClick}>
+        <span className="name">{this.state.name}</span>&nbsp;
+        (<span className="count">{this.state.count}</span>)
       </div>
     );
   }
@@ -29,4 +49,3 @@ StatusComponent.contextTypes = {
 StatusComponent.displayName = 'StatusComponent';
 
 export default StatusComponent;
-

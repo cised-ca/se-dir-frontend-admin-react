@@ -57,6 +57,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
 
         // Set active panel to the enterprise list
         this.props.setActivePanel(2);
+        this.props.refreshData();
       })
       .catch((error) => {
         // TODO: Display error

@@ -16,6 +16,27 @@ class PanelListComponent extends React.Component {
       activePanel: 1,
       enterpriseDetails: null
     };
+
+    this.handleStatusClick = this.handleStatusClick.bind(this);
+    this.handleEnterpriseClick = this.handleEnterpriseClick.bind(this);
+    this.setActivePanel = this.setActivePanel.bind(this);
+    this.refreshData = this.refreshData.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const next_statuses = nextProps.enterpriseStatuses;
+    const curr_status = this.state.status.toLowerCase();
+    const next_enterprises = next_statuses[curr_status];
+
+    if (next_enterprises.length !== this.state.enterprises.length) {
+      this.setState({
+        enterprises: next_enterprises
+      });
+    }
+  }
+
+  refreshData() {
+    this.props.refreshData();
   }
 
   setActivePanel(activePanel) {
@@ -24,10 +45,11 @@ class PanelListComponent extends React.Component {
     });
   }
 
-  handleStatusClick(enterprises) {
+  handleStatusClick(enterprises, status) {
     this.setState({
       activePanel: 2,
-      enterprises: enterprises
+      enterprises: enterprises,
+      status: status
     });
   }
 
@@ -43,18 +65,19 @@ class PanelListComponent extends React.Component {
 
     jsx.push(
       <StatusPanel key="status" enterpriseStatuses={this.props.enterpriseStatuses}
-        handleStatusClick={this.handleStatusClick.bind(this)} />
+        handleStatusClick={this.handleStatusClick} />
     );
 
     if (activePanel >= 2) {
       jsx.push(<EnterpriseListPanel key="enterprise-list" enterprises={this.state.enterprises}
-        handleEnterpriseClick={this.handleEnterpriseClick.bind(this)} />);
+        status={this.state.status} handleEnterpriseClick={this.handleEnterpriseClick} />);
     }
 
     if (activePanel >= 3) {
       jsx.push(<EnterpriseDetailsPanel key="enterprise-details"
-        setActivePanel={this.setActivePanel.bind(this)}
-        enterprise={this.state.enterpriseDetails} />);
+        setActivePanel={this.setActivePanel}
+        enterprise={this.state.enterpriseDetails}
+        refreshData={this.refreshData} />);
     }
 
     return jsx;
