@@ -1,6 +1,9 @@
 require('normalize.css/normalize.css');
 require('styles/App.css');
 
+/* Imported here since we don't have our own Modal component (yet?) */
+require('styles/Modal.scss');
+
 import React from 'react';
 
 import { browserHistory, Router, Route, IndexRoute } from 'react-router';
