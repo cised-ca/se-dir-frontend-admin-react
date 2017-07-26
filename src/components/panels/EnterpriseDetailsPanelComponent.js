@@ -80,21 +80,22 @@ class EnterpriseDetailsPanelComponent extends React.Component {
     let enterprise = this.state.enterprise;
     const endpoint = this.context.config.api_root + '/enterprise/' + enterprise.id;
 
+    let enterprise_copy = Object.assign({}, enterprise);
 
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    delete enterprise.id;
-    delete enterprise.locations;
+    delete enterprise_copy.id;
+    delete enterprise_copy.locations;
 
     // FIXME : handle 'fr' language
-    enterprise = {
-      en: enterprise
+    enterprise_copy = {
+      en: enterprise_copy
     };
 
     const request = new Request(endpoint, {
       method: 'PATCH',
-      body: JSON.stringify(enterprise),
+      body: JSON.stringify(enterprise_copy),
       headers: headers
     });
 
