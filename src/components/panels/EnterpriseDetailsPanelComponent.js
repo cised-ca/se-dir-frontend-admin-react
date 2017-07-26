@@ -108,10 +108,11 @@ class EnterpriseDetailsPanelComponent extends React.Component {
   handleInputChange(event) {
     const target = event.target;
 
+    let curr_enterprise = this.state.enterprise;
+    curr_enterprise[target.name] = target.value;
+
     this.setState({
-      enterprise: {
-        [target.name]: target.value
-      }
+      enterprise: curr_enterprise
     });
   }
 
