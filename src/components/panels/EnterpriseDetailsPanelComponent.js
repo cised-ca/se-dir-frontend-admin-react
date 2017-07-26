@@ -18,7 +18,8 @@ class EnterpriseDetailsPanelComponent extends React.Component {
 
     this.closeModal = this.closeModal.bind(this);
     this.deleteEnterprise = this.deleteEnterprise.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleStringInputChange = this.handleStringInputChange.bind(this);
+    this.handleNumberInputChange = this.handleNumberInputChange.bind(this);
     this.handleSubmitForm = this.handleSubmitForm.bind(this);
     this.handleDeleteEnterprise = this.handleDeleteEnterprise.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
@@ -79,6 +80,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
     let enterprise = this.state.enterprise;
     const endpoint = this.context.config.api_root + '/enterprise/' + enterprise.id;
 
+
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
@@ -105,7 +107,30 @@ class EnterpriseDetailsPanelComponent extends React.Component {
       });
   }
 
-  handleInputChange(event) {
+  handleNumberInputChange(event) {
+    const target = event.target;
+
+    const filterInt = function(value) {
+      if (/^([0-9]+)$/.test(value))
+        return Number(value);
+      return NaN;
+    }
+
+    const number = filterInt(target.value);
+
+    if (isNaN(number)) {
+      return;
+    }
+
+    let curr_enterprise = this.state.enterprise;
+    curr_enterprise[target.name] = number;
+
+    this.setState({
+      enterprise: curr_enterprise
+    });
+  }
+
+  handleStringInputChange(event) {
     const target = event.target;
 
     let curr_enterprise = this.state.enterprise;
@@ -153,7 +178,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
             Enterprise name:
             <input
               name="name"
-              onChange={this.handleInputChange}
+              onChange={this.handleStringInputChange}
               required
               value={enterprise.name} />
           </label>
@@ -162,7 +187,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
             Short description:
             <input
               name="short_description"
-              onChange={this.handleInputChange}
+              onChange={this.handleStringInputChange}
               value={enterprise.short_description} />
           </label>
 
@@ -170,7 +195,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
             Description:
             <textarea
               name="description"
-              onChange={this.handleInputChange}
+              onChange={this.handleStringInputChange}
               value={enterprise.description} />
           </label>
 
@@ -178,7 +203,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
             Year started:
             <input
               name="year_started"
-              onChange={this.handleInputChange}
+              onChange={this.handleNumberInputChange}
               value={enterprise.year_started} />
           </label>
 
@@ -186,7 +211,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
             Offering:
             <input
               name="offering"
-              onChange={this.handleInputChange}
+              onChange={this.handleStringInputChange}
               value={enterprise.offering} />
           </label>
 
@@ -194,7 +219,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
             Website:
             <input
               name="website"
-              onChange={this.handleInputChange}
+              onChange={this.handleStringInputChange}
               type="url"
               value={enterprise.website} />
           </label>
@@ -203,7 +228,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
             Facebook username:
             <input
               name="facebook"
-              onChange={this.handleInputChange}
+              onChange={this.handleStringInputChange}
               value={enterprise.facebook} />
           </label>
 
@@ -211,7 +236,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
             Instagram username:
             <input
               name="instagram"
-              onChange={this.handleInputChange}
+              onChange={this.handleStringInputChange}
               value={enterprise.instagram} />
           </label>
 
@@ -219,7 +244,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
             Twitter username:
             <input
               name="twitter"
-              onChange={this.handleInputChange}
+              onChange={this.handleStringInputChange}
               value={enterprise.twitter} />
           </label>
 
