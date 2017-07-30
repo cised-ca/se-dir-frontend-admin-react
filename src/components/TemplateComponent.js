@@ -16,11 +16,17 @@ class TemplateComponent extends React.Component {
     }
   }
 
+  setLoggedIn(loggedIn) {
+    this.setState({isLoggedIn: loggedIn});
+  }
+
   constructor(props) {
     super(props);
 
     this.state = {
       config: {},
+      isLoggedIn: false,
+      setLoggedIn: this.setLoggedIn.bind(this),
       logger: {
         // eslint-disable-next-line no-console
         notify: function(msg) { console.error(msg); }
@@ -93,7 +99,7 @@ class TemplateComponent extends React.Component {
 
     return (
       <div className="template-component template">
-        <TopBar />
+        <TopBar isLoggedIn={this.state.isLoggedIn} setLoggedIn={this.state.setLoggedIn} />
 
         <main className="template__main">
           {childWithProps}
