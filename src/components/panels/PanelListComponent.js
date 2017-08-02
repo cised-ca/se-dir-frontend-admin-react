@@ -24,6 +24,9 @@ class PanelListComponent extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (!this.state.status) {
+      return;
+    }
     const next_statuses = nextProps.enterpriseStatuses;
     const curr_status = this.state.status.toLowerCase();
     const next_enterprises = next_statuses[curr_status];

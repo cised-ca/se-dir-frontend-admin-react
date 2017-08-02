@@ -2,21 +2,28 @@
 
 import React from 'react';
 
-import { Link } from 'react-router';
-
 require('styles/pages/LoginPage.scss');
 
 class LoginPageComponent extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
   render() {
+    const api_root = this.context.config.api_root;
     return (
       <div className="loginpage-component login-page">
         <div className="login-form">
           <h1 className="login-form__title">Login With</h1>
 
           <div className="login-form__content">
-            <Link to="/dashboard">Facebook</Link>
-            <Link to="/dashboard">Google</Link>
-            <Link to="/dashboard">Twitter</Link>
+          <a role="button" className="button button--login" href={api_root + '/account/login/facebook'}>
+                  <img className="login__icon" src="/images/facebook.png" alt="" />
+          </a>
+          <a role="button" className="button button--login" href={api_root + '/account/login/twitter'}>
+                  <img className="login__icon" src="/images/twitter.png" alt="" />
+          </a>
           </div>
         </div>
       </div>
@@ -26,5 +33,9 @@ class LoginPageComponent extends React.Component {
 
 LoginPageComponent.displayName = 'PagesLoginPageComponent';
 
-export default LoginPageComponent;
+LoginPageComponent.contextTypes = {
+  'config': React.PropTypes.object,
+  'logger': React.PropTypes.object
+};
 
+export default LoginPageComponent;

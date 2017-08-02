@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import { browserHistory } from 'react-router';
 import PanelList from '../panels/PanelListComponent';
 import Loading from '../LoadingComponent';
 
@@ -21,18 +22,33 @@ class DashboardComponent extends React.Component {
 
   getEnterpriseStatuses() {
     const api_root = this.context.config.api_root;
+    let component = this;
 
     if (!api_root) {
       return Promise.resolve(null);
     }
 
-    return fetch(api_root + '/account/enterpriseSummary')
+    return fetch(api_root + '/account/enterpriseSummary', {credentials: 'include'})
       .then((response) => {
-        return response
-          .json()
-          .then(function(json) {
-            return json;
-          });
+
+          if (response.ok) {
+            component.props.setLoggedIn(true);
+            return response
+              .json()
+              .then(function(json) {
+                return json;
+              });
+          }
+
+          if (response.status == 403) {
+            // IF we get a 403 error, it means we're not logged in.
+            // Set logged in to false and redirect to login page
+            component.props.setLoggedIn(false);
+            browserHistory.push('/');
+            return Promise.resolve(null);
+          }
+
+          this.context.logger.notify('Got response while fetching account/enterpriseSummary: ' + response.status);
       })
       .catch((error) => {
         this.context.logger.notify(error);

@@ -1,4 +1,8 @@
 .top-bar {
+  
+  $primary-color: #00aa51; // CSED green
+  $primary-color-dark: #094; // Darker green for hover/active states
+
   background: #094;
   padding: 8px 10px;
 
@@ -7,7 +11,34 @@
     margin: 0;
     padding: 0;
   }
+
+  .nav__items {
+    margin: 0;
+    padding: 0;
+    text-align: right;
+  }
+
+  .nav__item {
+    display: inline-block;
+  }
+
+  .nav__link {
+    background-color: $primary-color;
+    display: inline-block;
+    font-family: "helvetica-black";
+    font-weight: 400;
+    margin-right: 10px;
+    padding: 13px 8px 8px;
+    text-transform: uppercase;
+  }
+
+  .nav__link:hover {
+    background-color: $primary-color-dark;
+    text-decoration: underline;
+  }
+
+  .nav__link:link,
+  .nav__link:visited {
+    color: #fff;
+  }
 }
-
-
-
