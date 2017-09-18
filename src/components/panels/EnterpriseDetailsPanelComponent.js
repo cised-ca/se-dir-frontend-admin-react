@@ -3,6 +3,11 @@
 import React from 'react';
 import Modal from 'react-modal';
 
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.scss';
+
+import EnterpriseForm from '../EnterpriseFormComponent';
+
 Modal.setAppElement('#app');
 
 require('styles/panels/EnterpriseDetailsPanel.scss');
@@ -12,259 +17,64 @@ class EnterpriseDetailsPanelComponent extends React.Component {
     super(props);
 
     this.state = {
-      enterprise: props.enterprise,
-      modalIsOpen: false
+      enterprise: props.enterprise
     };
-
-    this.closeModal = this.closeModal.bind(this);
-    this.deleteEnterprise = this.deleteEnterprise.bind(this);
-    this.handleStringInputChange = this.handleStringInputChange.bind(this);
-    this.handleNumberInputChange = this.handleNumberInputChange.bind(this);
-    this.handleSubmitForm = this.handleSubmitForm.bind(this);
-    this.handleDeleteEnterprise = this.handleDeleteEnterprise.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-  }
-
-  closeModal() {
-    this.setState({modalIsOpen: false});
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.enterprise.name !== this.props.enterprise.name) {
+    if (nextProps.enterprise[0].enterprise.name !== this.props.enterprise[0].enterprise.name) {
       this.setState({
         enterprise: nextProps.enterprise
       });
     }
   }
 
-  handleCancel(event) {
-    event.preventDefault();
+  fillTabList() {
+    const locales = this.context.config.locales;
 
-    this.props.setActivePanel(2);
+    const tabs = locales.map((locale) => {
+      return (
+        <Tab key={locale.locale}>{locale.name}</Tab>
+      );
+    });
+
+    return tabs;
   }
 
-  deleteEnterprise() {
-    const enterprise = this.state.enterprise;
-    const endpoint = this.context.config.api_root + '/enterprise/' + enterprise.id;
+  fillTabPanels() {
+    const locales = this.context.config.locales;
 
-    const request = new Request(endpoint, {
-      method: 'DELETE'
+    const panels = locales.map((locale, index) => {
+      const enterpriseForm = <EnterpriseForm enterprise={this.state.enterprise[index].enterprise} locale={locale.locale} />
+
+      return (
+        <TabPanel key={"enterprise" + index}>{enterpriseForm}</TabPanel>
+      );
     });
 
-    fetch(request)
-      .then((response) => {
-        // TODO: Display success
-        // TODO: Refresh list of enterprises
-
-        // Set active panel to the enterprise list
-        this.props.setActivePanel(2);
-        this.props.refreshData();
-      })
-      .catch((error) => {
-        // TODO: Display error
-    });
-  }
-
-  handleDeleteEnterprise(event) {
-    event.preventDefault();
-
-    // Are you sure modal
-    this.setState({
-      modalIsOpen: true
-    });
-  }
-
-  handleSubmitForm(event) {
-    event.preventDefault();
-
-    let enterprise = this.state.enterprise;
-    const endpoint = this.context.config.api_root + '/enterprise/' + enterprise.id;
-
-    let enterprise_copy = Object.assign({}, enterprise);
-
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-    delete enterprise_copy.id;
-    delete enterprise_copy.locations;
-
-    // FIXME : handle 'fr' language
-    enterprise_copy = {
-      en: enterprise_copy
-    };
-
-    const request = new Request(endpoint, {
-      method: 'PATCH',
-      body: JSON.stringify(enterprise_copy),
-      headers: headers
-    });
-
-    fetch(request)
-      .then((response) => {
-        // TODO: Display success
-      })
-      .catch((error) => {
-        // TODO: Display error
-      });
-  }
-
-  handleNumberInputChange(event) {
-    const target = event.target;
-
-    const filterInt = function(value) {
-      if (/^([0-9]+)$/.test(value))
-        return Number(value);
-      return NaN;
-    }
-
-    const number = filterInt(target.value);
-
-    if (isNaN(number)) {
-      return;
-    }
-
-    let curr_enterprise = this.state.enterprise;
-    curr_enterprise[target.name] = number;
-
-    this.setState({
-      enterprise: curr_enterprise
-    });
-  }
-
-  handleStringInputChange(event) {
-    const target = event.target;
-
-    let curr_enterprise = this.state.enterprise;
-    curr_enterprise[target.name] = target.value;
-
-    this.setState({
-      enterprise: curr_enterprise
-    });
+    return panels;
   }
 
   render() {
-    const enterprise = this.state.enterprise;
+    const tabs = this.fillTabList();
+    const panels = this.fillTabPanels(false);
+    const enterprise = this.state.enterprise[0].enterprise; // FIXME: Have this be the current locale, not the first one in the list
 
-    // TODO: Add missing fields
     return (
       <div className="panel panel--wide enterprisedetailspanel-component">
-        <Modal
-          isOpen={this.state.modalIsOpen}
-          onRequestClose={this.closeModal}
-          contentLabel="Are you sure you want to delete {enterprise.name}?"
-        >
+        <Tabs>
+          <TabList>
+            {tabs}
+          </TabList>
 
-          <h2 className="modal__title" ref={subtitle => this.subtitle = subtitle}>
-            Are you sure you want to delete {enterprise.name}?
-          </h2>
-
-          <p>
-            You are about to delete {enterprise.name}. This cannot be undone.
-            Are you sure you'd like to proceed?
-          </p>
-
-          <input className="button button--destructive" name="delete"
-            onClick={this.deleteEnterprise}
-            type="button" value="Delete" />
-
-          <input className="button button--default" name="cancel"
-            onClick={this.closeModal}
-            type="button" value="Cancel" />
-        </Modal>
-
-        <h1>{enterprise.name}</h1>
-
-        <form onSubmit={this.handleSubmitForm}>
-          <label>
-            Enterprise name:
-            <input
-              name="name"
-              onChange={this.handleStringInputChange}
-              required
-              value={enterprise.name} />
-          </label>
-
-          <label>
-            Short description:
-            <input
-              name="short_description"
-              onChange={this.handleStringInputChange}
-              value={enterprise.short_description} />
-          </label>
-
-          <label>
-            Description:
-            <textarea
-              name="description"
-              onChange={this.handleStringInputChange}
-              value={enterprise.description} />
-          </label>
-
-          <label>
-            Year started:
-            <input
-              name="year_started"
-              onChange={this.handleNumberInputChange}
-              value={enterprise.year_started} />
-          </label>
-
-          <label>
-            Offering:
-            <input
-              name="offering"
-              onChange={this.handleStringInputChange}
-              value={enterprise.offering} />
-          </label>
-
-          <label>
-            Website:
-            <input
-              name="website"
-              onChange={this.handleStringInputChange}
-              type="url"
-              value={enterprise.website} />
-          </label>
-
-          <label>
-            Facebook username:
-            <input
-              name="facebook"
-              onChange={this.handleStringInputChange}
-              value={enterprise.facebook} />
-          </label>
-
-          <label>
-            Instagram username:
-            <input
-              name="instagram"
-              onChange={this.handleStringInputChange}
-              value={enterprise.instagram} />
-          </label>
-
-          <label>
-            Twitter username:
-            <input
-              name="twitter"
-              onChange={this.handleStringInputChange}
-              value={enterprise.twitter} />
-          </label>
-
-          <input className="button button--primary" type="submit" value="Save" />
-
-          <input className="button button--destructive" name="delete"
-            onClick={this.handleDeleteEnterprise}
-            type="button" value="Delete" />
-
-          <input className="button button--default" name="cancel"
-            onClick={this.handleCancel}
-            type="button" value="Cancel" />
-        </form>
+          {panels}
+        </Tabs>
       </div>
     );
   }
 }
 
-EnterpriseDetailsPanelComponent.displayName = 'PanelsEnterpriseDetailsPanelComponent';
+EnterpriseDetailsPanelComponent.displayName = 'EnterpriseDetailsPanelComponent';
 
 EnterpriseDetailsPanelComponent.contextTypes = {
   'config': React.PropTypes.object,

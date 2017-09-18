@@ -17,13 +17,28 @@ class EnterpriseListPanelComponent extends React.Component {
   getEnterpriseDetails(enterpriseId) {
     const api_root = this.context.config.api_root;
 
-    fetch(api_root + '/enterprise/' + enterpriseId)
-      .then((response) => {
-        return response
-          .json()
-          .then((enterprise_details) => {
-            // Pass this up to PanelListComponent
-            this.props.handleEnterpriseClick(enterprise_details);
+    let locales = this.context.config.locales;
+
+    // Fetch enterprise details in all locales
+    // Note: we could defer this until the user clicks on a locale tab
+    //       if fetching all locales takes a long time
+    Promise.all(locales.map((locale) => {
+      return fetch(api_root + '/enterprise/' + enterpriseId + "?lang=" + locale.locale);
+    }))
+      .then((responses) => {
+        Promise.all(responses.map((response) => {
+          return response.json();
+        }))
+          .then((json_array) => {
+            // For each json obj in array, construct a superset obj containing the locale, I guess.
+            const i18nEnterprise = locales.map((locale, index) => {
+              return {
+                locale: locale,
+                enterprise: json_array[index]
+              };
+            });
+
+            this.props.handleEnterpriseClick(i18nEnterprise);
           });
       })
       .catch((error) => {
