@@ -1,4 +1,13 @@
 .button--logout {
-  font-size: 15px;
-  padding: 8px 10px;
+  background-color: transparent;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  font-family: "helvetica-black";
+  padding: 13px 8px 8px;
+  text-transform: uppercase;
+}
+
+.button--logout:hover {
+  text-decoration: underline;
 }

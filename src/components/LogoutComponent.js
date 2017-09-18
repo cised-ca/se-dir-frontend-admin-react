@@ -3,6 +3,8 @@
 import React from 'react';
 import {browserHistory} from 'react-router';
 
+require('styles/Logout.scss');
+
 class LogoutComponent extends React.Component {
   
   handleLogout(e) {
@@ -41,7 +43,7 @@ class LogoutComponent extends React.Component {
   render() {
     return (
       <div className="logout-component">
-        <button type="button" className={this.props.className} onClick={this.handleLogout.bind(this)}>Sign Out</button>
+        <button type="button" className="button--logout" onClick={this.handleLogout.bind(this)}>Sign Out</button>
       </div>
     );
   }
