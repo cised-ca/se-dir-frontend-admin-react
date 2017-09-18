@@ -1,0 +1,16 @@
+{
+  "api_root": "https://example.org/api/",
+  "defaultLocale": "en",
+  "locales": [
+    {
+      "locale": "en",
+      "name": "English",
+      "prefix": "http://example.org"
+    },
+    {
+      "locale": "fr",
+      "name": "French",
+      "prefix": "http://exemple.org"
+    }
+  ]
+}
