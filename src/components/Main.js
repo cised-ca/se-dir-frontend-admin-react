@@ -12,6 +12,8 @@ import LoginPage from './pages/LoginPageComponent.js';
 import AccountPage from './pages/AccountPageComponent.js';
 import Dashboard from './pages/DashboardComponent.js';
 
+import 'whatwg-fetch';
+
 class AppComponent extends React.Component {
   render() {
     return (
