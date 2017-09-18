@@ -29,9 +29,9 @@ class StatusPanelComponent extends React.Component {
     return (
       <div className="panel statuspanel-component">
         <StatusList handleStatusClick={this.handleStatusClick}>
-          <Status name="Published" enterprises={this.state.published} />
-          <Status name="Pending" enterprises={this.state.pending} />
-          <Status name="Unpublished" enterprises={this.state.unpublished} />
+          <Status name="published" enterprises={this.state.published} />
+          <Status name="pending" enterprises={this.state.pending} />
+          <Status name="unpublished" enterprises={this.state.unpublished} />
         </StatusList>
       </div>
     );

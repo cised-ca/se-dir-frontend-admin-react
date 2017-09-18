@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Modal from 'react-modal';
+import { translate } from 'react-i18next';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.scss';
@@ -31,10 +32,11 @@ class EnterpriseDetailsPanelComponent extends React.Component {
 
   fillTabList() {
     const locales = this.context.config.locales;
+    const { t } = this.props;
 
     const tabs = locales.map((locale) => {
       return (
-        <Tab key={locale.locale}>{locale.name}</Tab>
+        <Tab key={locale.locale}>{t('enterpriseDetailsPanel:' + locale.name)}</Tab>
       );
     });
 
@@ -48,7 +50,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
       const enterpriseForm = <EnterpriseForm enterprise={this.state.enterprise[index].enterprise} locale={locale.locale} />
 
       return (
-        <TabPanel key={"enterprise" + index}>{enterpriseForm}</TabPanel>
+        <TabPanel key={'enterprise' + index}>{enterpriseForm}</TabPanel>
       );
     });
 
@@ -58,7 +60,6 @@ class EnterpriseDetailsPanelComponent extends React.Component {
   render() {
     const tabs = this.fillTabList();
     const panels = this.fillTabPanels(false);
-    const enterprise = this.state.enterprise[0].enterprise; // FIXME: Have this be the current locale, not the first one in the list
 
     return (
       <div className="panel panel--wide enterprisedetailspanel-component">
@@ -81,4 +82,4 @@ EnterpriseDetailsPanelComponent.contextTypes = {
   'logger': React.PropTypes.object
 };
 
-export default EnterpriseDetailsPanelComponent;
+export default translate('enterpriseDetailsPanel')(EnterpriseDetailsPanelComponent);

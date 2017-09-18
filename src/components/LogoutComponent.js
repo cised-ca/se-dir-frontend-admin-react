@@ -1,6 +1,8 @@
 'use strict';
 
 import React from 'react';
+import { translate } from 'react-i18next';
+
 import {browserHistory} from 'react-router';
 
 require('styles/Logout.scss');
@@ -41,9 +43,11 @@ class LogoutComponent extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
+
     return (
       <div className="logout-component">
-        <button type="button" className="button--logout" onClick={this.handleLogout.bind(this)}>Sign Out</button>
+        <button type="button" className="button--logout" onClick={this.handleLogout.bind(this)}>{t('logout:signOut')}</button>
       </div>
     );
   }
@@ -60,4 +64,4 @@ LogoutComponent.contextTypes = {
 // LogoutComponent.propTypes = {};
 // LogoutComponent.defaultProps = {};
 
-export default LogoutComponent;
+export default translate('logout')(LogoutComponent);

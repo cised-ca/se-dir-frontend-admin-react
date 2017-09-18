@@ -23,7 +23,7 @@ class EnterpriseListPanelComponent extends React.Component {
     // Note: we could defer this until the user clicks on a locale tab
     //       if fetching all locales takes a long time
     Promise.all(locales.map((locale) => {
-      return fetch(api_root + '/enterprise/' + enterpriseId + "?lang=" + locale.locale);
+      return fetch(api_root + '/enterprise/' + enterpriseId + '?lang=' + locale.locale);
     }))
       .then((responses) => {
         Promise.all(responses.map((response) => {

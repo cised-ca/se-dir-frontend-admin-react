@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Modal from 'react-modal';
+import { translate } from 'react-i18next';
 
 Modal.setAppElement('#app');
 
@@ -137,115 +138,117 @@ class EnterpriseFormComponent extends React.Component {
 
   render() {
     const enterprise = this.state.enterprise;
+    const { t } = this.props;
 
     return (
-      <div className="enterpriseform-component enterprise-form">
+      <div className='enterpriseform-component enterprise-form'>
+
         <Modal
           isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
-          contentLabel="Are you sure you want to delete {enterprise.name}?"
+          contentLabel='Are you sure you want to delete {enterprise.name}?'
         >
 
-          <h2 className="modal__title" ref={subtitle => this.subtitle = subtitle}>
-            Are you sure you want to delete {enterprise.name}?
+          <h2 className='modal__title' ref={subtitle => this.subtitle = subtitle}>
+            {t('enterpriseForm:areYouSureDelete')} {enterprise.name}?
           </h2>
 
           <p>
-            You are about to delete {enterprise.name}. This cannot be undone.
-            Are you sure you'd like to proceed?
+            {t('enterpriseForm:youAreAboutToDelete')} {enterprise.name}. {t('enterpriseForm:thisCannotBeUndone')}
+            {t('enterpriseForm:areYouSureProceed')}
           </p>
 
-          <input className="button button--destructive" name="delete"
+          <input className='button button--destructive' name='delete'
             onClick={this.deleteEnterprise}
-            type="button" value="Delete" />
+            type='button' value={t('enterpriseForm:delete')} />
 
-          <input className="button button--default" name="cancel"
+          <input className='button button--default' name='cancel'
             onClick={this.closeModal}
-            type="button" value="Cancel" />
+            type='button' value={t('enterpriseForm:cancel')} />
         </Modal>
       
         <h1>{enterprise.name}</h1>
 
         <form onSubmit={this.handleSubmitForm}>
           <label>
-            Enterprise name:
+            {t('enterpriseForm:enterpriseName')}
             <input
-              name="name"
+              name='name'
               onChange={this.handleStringInputChange}
               required
-              value={enterprise.name || ""} />
+              value={enterprise.name || ''} />
           </label>
 
           <label>
-            Short description:
+            {t('enterpriseForm:shortDescription')}
             <input
-              name="short_description"
+              name='short_description'
               onChange={this.handleStringInputChange}
-              value={enterprise.short_description || ""} />
+              value={enterprise.short_description || ''} />
           </label>
 
           <label>
-            Description:
+            {t('enterpriseForm:description')}
             <textarea
-              name="description"
+              name='description'
               onChange={this.handleStringInputChange}
-              value={enterprise.description || ""} />
+              value={enterprise.description || ''} />
           </label>
 
           <label>
-            Year started:
+            {t('enterpriseForm:yearStarted')}
             <input
-              name="year_started"
+              name='year_started'
               onChange={this.handleNumberInputChange}
-              value={enterprise.year_started || ""} />
+              value={enterprise.year_started || ''} />
           </label>
 
           <label>
-            Offering:
+            {t('enterpriseForm:offering')}
             <input
-              name="offering"
+              name='offering'
               onChange={this.handleStringInputChange}
-              value={enterprise.offering || ""} />
+              value={enterprise.offering || ''} />
           </label>
 
           <label>
-            Website:
+            {t('enterpriseForm:website')}
             <input
-              name="website"
+              name='website'
               onChange={this.handleStringInputChange}
-              type="url"
-              value={enterprise.website || ""} />
+              type='url'
+              value={enterprise.website || ''} />
           </label>
 
           <label>
-            Facebook username:
+            {t('enterpriseForm:facebookUsername')}
             <input
-              name="facebook"
+              name='facebook'
               onChange={this.handleStringInputChange}
-              value={enterprise.facebook || ""} />
+              value={enterprise.facebook || ''} />
           </label>
 
           <label>
-            Instagram username:
+            {t('enterpriseForm:instagramUsername')}
             <input
-              name="instagram"
+              name='instagram'
               onChange={this.handleStringInputChange}
-              value={enterprise.instagram || ""} />
+              value={enterprise.instagram || ''} />
           </label>
 
           <label>
-            Twitter username:
+            {t('enterpriseForm:twitterUsername')}
             <input
-              name="twitter"
+              name='twitter'
               onChange={this.handleStringInputChange}
-              value={enterprise.twitter || ""} />
+              value={enterprise.twitter || ''} />
           </label>
           
-          <input className="button button--primary" type="submit" value="Save" />
+          <input className='button button--primary' type='submit' value={t('enterpriseForm:save')} />
 
-          <input className="button button--destructive" name="delete"
+          <input className='button button--destructive' name='delete'
             onClick={this.handleDeleteEnterprise}
-            type="button" value="Delete" />
+            type='button' value={t('enterpriseForm:delete')} />
         </form>
       </div>
     );
@@ -259,4 +262,4 @@ EnterpriseFormComponent.contextTypes = {
   'logger': React.PropTypes.object
 };
 
-export default EnterpriseFormComponent;
+export default translate('enterpriseForm')(EnterpriseFormComponent);

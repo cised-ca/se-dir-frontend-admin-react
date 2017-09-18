@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import i18n from '../i18n';
 
 import TopBar from './TopBarComponent.js';
 
@@ -82,6 +83,26 @@ class TemplateComponent extends React.Component {
     app
       .get_config()
       .then(function(config) {
+        let currentLocale = config.defaultLocale || 'en';
+
+        // If we have locales in the config, figure out which language to
+        // display to the user based on the current url
+        if (config.locales) {
+          let currentUrl = window.location.href;
+
+          for (let i = 0; i < config.locales.length; i += 1) {
+            let locale = config.locales[i];
+            let pattern = new RegExp('^' + locale.prefix, 'i');
+
+            if (currentUrl.search(pattern) !== -1) {
+              currentLocale = locale.locale;
+              break;
+            }
+          }
+        }
+
+        i18n.changeLanguage(currentLocale);
+
         app.setState(
           {
             config: config

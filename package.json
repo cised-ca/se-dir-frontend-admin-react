@@ -6,7 +6,7 @@
   "main": "",
   "scripts": {
     "clean": "rimraf dist/*",
-    "copy": "copyfiles -u 1 ./src/images/* ./src/config.json ./src/index.html ./src/favicon.ico ./dist",
+    "copy": "copyfiles -u 1 ./src/images/* ./src/locales/** ./src/config.json ./src/index.html ./src/favicon.ico ./dist",
     "dist": "npm run copy & webpack --env=dist",
     "lint": "eslint ./src",
     "posttest": "npm run lint",
@@ -70,9 +70,13 @@
   "dependencies": {
     "airbrake-js": "^0.5.9",
     "core-js": "^2.0.0",
+    "i18next": "^8.4.3",
+    "i18next-xhr-backend": "^1.4.3",
+    "node-sass": "^4.5.3",
     "normalize.css": "^4.0.0",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
+    "react-i18next": "^4.8.0",
     "react-modal": "^2.2.2",
     "react-router": "^2.5.0",
     "react-tabs": "^2.0.0",

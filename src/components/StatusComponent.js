@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import { translate } from 'react-i18next';
 
 require('styles/Status.scss');
 
@@ -32,9 +33,11 @@ class StatusComponent extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
+
     return (
       <div className="status-component status" onClick={this.handleClick}>
-        <span className="name">{this.state.name}</span>&nbsp;
+        <span className="name">{t('status:' + this.state.name)}</span>&nbsp;
         (<span className="count">{this.state.count}</span>)
       </div>
     );
@@ -48,4 +51,4 @@ StatusComponent.contextTypes = {
 
 StatusComponent.displayName = 'StatusComponent';
 
-export default StatusComponent;
+export default translate('status')(StatusComponent);
