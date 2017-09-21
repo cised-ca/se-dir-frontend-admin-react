@@ -1,5 +1,40 @@
+* {
+  box-sizing: border-box;
+}
+
 html,
 body,
 .app {
   height: 100%;
+}
+
+/* FIXME: move this to proper component */
+
+.panel {
+    display: none;
+}
+
+.panel:last-child {
+    display: block;
+}
+
+@media only screen and (min-width: 768px) {
+  .panel {
+    border-right: 1px solid #000;
+    max-width: 400px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+    .panel {
+        display: block;
+        flex: 1 auto;
+        height: 100vh;
+        overflow: auto;
+    }
+
+    .panel--wide {
+        flex: 3 0px;
+        max-width: none;
+    }
 }

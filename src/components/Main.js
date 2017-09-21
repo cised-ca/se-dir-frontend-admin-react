@@ -1,12 +1,18 @@
 require('normalize.css/normalize.css');
 require('styles/App.css');
 
+/* Imported here since we don't have our own Modal component (yet?) */
+require('styles/Modal.scss');
+
 import React from 'react';
 
 import { browserHistory, Router, Route, IndexRoute } from 'react-router';
 import Template from './TemplateComponent.js';
 import LoginPage from './pages/LoginPageComponent.js';
+import AccountPage from './pages/AccountPageComponent.js';
 import Dashboard from './pages/DashboardComponent.js';
+
+import 'whatwg-fetch';
 
 class AppComponent extends React.Component {
   render() {
@@ -21,6 +27,7 @@ class AppComponent extends React.Component {
           }}
       >
           <IndexRoute component={LoginPage} />
+          <Route name='account-page' path='/account' component={AccountPage} />
 
           <Route name='admin-dashboard' path='/dashboard' component={Dashboard} />
         </Route>

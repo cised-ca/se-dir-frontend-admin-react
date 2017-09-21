@@ -1,13 +1,49 @@
 .top-bar {
+  
+  $primary-color: #00aa51; // CSED green
+  $primary-color-dark: #094; // Darker green for hover/active states
+
   background: #094;
   padding: 8px 10px;
 
+  header {
+    overflow: hidden;
+  }
+
   h1 {
     color: #fff;
+    float: left;
     margin: 0;
     padding: 0;
   }
+
+  .nav__items {
+    display: inline-block;
+    float: right;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav__item {
+    display: inline-block;
+  }
+
+  .nav__link {
+    display: inline-block;
+    font-family: "helvetica-black";
+    font-weight: 400;
+    margin-right: 10px;
+    padding: 13px 8px 8px;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .nav__link:hover {
+    text-decoration: underline;
+  }
+
+  .nav__link:link,
+  .nav__link:visited {
+    color: #fff;
+  }
 }
-
-
-
