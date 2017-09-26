@@ -27,13 +27,13 @@ class PanelListComponent extends React.Component {
     if (!this.state.status) {
       return;
     }
-    const next_statuses = nextProps.enterpriseStatuses;
-    const curr_status = this.state.status.toLowerCase();
-    const next_enterprises = next_statuses[curr_status];
+    const nextStatuses = nextProps.enterpriseStatuses;
+    const currStatus = this.state.status.toLowerCase();
+    const nextEnterprises = nextStatuses[currStatus];
 
-    if (next_enterprises.length !== this.state.enterprises.length) {
+    if (nextEnterprises.length !== this.state.enterprises.length) {
       this.setState({
-        enterprises: next_enterprises
+        enterprises: nextEnterprises
       });
     }
   }

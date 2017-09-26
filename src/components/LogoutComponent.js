@@ -15,11 +15,11 @@ class LogoutComponent extends React.Component {
   }
 
   performLogout() {
-    let api_root = this.context.config.api_root;
-    if (!api_root) {
+    let apiRoot = this.context.config.api_root;
+    if (!apiRoot) {
       return;
     }
-    let url  = api_root + '/account/logout';
+    let url  = apiRoot + '/account/logout';
     let component = this;
 
     fetch(url, {credentials: 'include'})

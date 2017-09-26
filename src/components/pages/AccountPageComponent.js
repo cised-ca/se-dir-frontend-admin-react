@@ -24,24 +24,24 @@ class AccountPageComponent extends React.Component {
    * Called before receiving new props
    */
   componentWillReceiveProps(nextProps, nextContext) {
-    let current_api_root = this.context.config.api_root,
-      new_api_root = nextContext.config.api_root,
-      do_query;
+    let currentApiRoot = this.context.config.api_root,
+      newApiRoot = nextContext.config.api_root,
+      doQuery;
 
-    do_query = (current_api_root !== new_api_root);
+    doQuery = (currentApiRoot !== newApiRoot);
 
     // If the api root is different than the previous
     // time we received props/context, trigger a new fetch
-    if (do_query) {
-      this.getPermissions(new_api_root);
+    if (doQuery) {
+      this.getPermissions(newApiRoot);
     }
   }
 
-  getPermissions(api_root) {
-    if (!api_root) {
+  getPermissions(apiRoot) {
+    if (!apiRoot) {
       return;
     }
-    let url  = api_root + '/account/permissions';
+    let url  = apiRoot + '/account/permissions';
     let component = this;
 
     fetch(url, {credentials: 'include'})
