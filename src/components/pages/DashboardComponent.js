@@ -28,7 +28,7 @@ class DashboardComponent extends React.Component {
       return Promise.resolve(null);
     }
 
-    return fetch(api_root + '/account/enterpriseSummary', {credentials: 'include'})
+    return fetch(api_root + '/account/enterpriseSummary', {credentials: 'same-origin'})
       .then((response) => {
 
           if (response.ok) {
