@@ -28,7 +28,7 @@ class DashboardComponent extends React.Component {
       return Promise.resolve(null);
     }
 
-    return fetch(api_root + '/account/enterpriseSummary', {credentials: 'include'})
+    return fetch(api_root + '/account/enterpriseSummary', {credentials: 'same-origin'})
       .then((response) => {
 
           if (response.ok) {
@@ -44,7 +44,7 @@ class DashboardComponent extends React.Component {
             // IF we get a 403 error, it means we're not logged in.
             // Set logged in to false and redirect to login page
             component.props.setLoggedIn(false);
-            browserHistory.push('/');
+            browserHistory.push('/admin');
             return Promise.resolve(null);
           }
 

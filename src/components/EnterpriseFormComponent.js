@@ -51,14 +51,14 @@ class EnterpriseFormComponent extends React.Component {
     delete enterprise_copy.locations;
 
     enterprise_final[locale] = enterprise_copy;
-    
+
     const request = new Request(endpoint, {
       method: 'PATCH',
       body: JSON.stringify(enterprise_final),
       headers: headers
     });
 
-    fetch(request)
+    fetch(request, {credentials: 'same-origin'})
       .then((response) => {
         // TODO: Display success
       })
@@ -109,7 +109,7 @@ class EnterpriseFormComponent extends React.Component {
       method: 'DELETE'
     });
 
-    fetch(request)
+    fetch(request, {credentials: 'same-origin'})
       .then((response) => {
         // TODO: Display success
         // TODO: Refresh list of enterprises

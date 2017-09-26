@@ -23,6 +23,49 @@ module.exports = {
     contentBase: './src/',
     historyApiFallback: true,
     hot: true,
+    setup: function(app) {
+      app.use('/admin/locales', function(req, res) {
+        var options = {
+          root: __dirname + '/../src/'
+        };
+
+        res.sendFile('locales' + req.url, options, function(err) {
+          if (err) {
+            console.log(err);
+          }
+
+          res.end();
+        });
+      });
+
+      app.use('/admin/config.json', function(req, res) {
+        var options = {
+          root: __dirname + '/../src/'
+        };
+
+        res.sendFile('config.json', options, function(err) {
+          if (err) {
+            console.log(err);
+          }
+
+          res.end();
+        });
+      });
+
+      app.use('/admin/images', function(req, res) {
+        var options = {
+          root: __dirname + '/../src/'
+        };
+
+        res.sendFile('images' + req.url, options, function(err) {
+          if (err) {
+            console.log(err);
+          }
+
+          res.end();
+        });
+      });
+    },
     port: defaultSettings.port,
     publicPath: defaultSettings.publicPath,
     proxy: {

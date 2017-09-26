@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { translate } from 'react-i18next';
+import { browserHistory } from 'react-router';
 
 require('styles/pages/LoginPage.scss');
 
@@ -9,6 +10,12 @@ class LoginPageComponent extends React.Component {
 
   constructor(props) {
     super(props);
+  }
+
+  componentWillMount() {
+    if (this.props.isLoggedIn) {
+      browserHistory.push('/admin/dashboard');
+    }
   }
 
   render() {
@@ -22,10 +29,10 @@ class LoginPageComponent extends React.Component {
 
           <div className="login-form__content">
           <a role="button" className="button button--login" href={api_root + '/account/login/facebook'}>
-                  <img className="login__icon" src="/images/facebook.png" alt="" />
+                  <img className="login__icon" src="/admin/images/facebook.png" alt="" />
           </a>
           <a role="button" className="button button--login" href={api_root + '/account/login/twitter'}>
-                  <img className="login__icon" src="/images/twitter.png" alt="" />
+                  <img className="login__icon" src="/admin/images/twitter.png" alt="" />
           </a>
           </div>
         </div>

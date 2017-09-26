@@ -15,6 +15,16 @@
     float: left;
     margin: 0;
     padding: 0;
+
+    a[href] {
+      color: #fff;
+      text-decoration: none;
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+    }
   }
 
   .nav__items {

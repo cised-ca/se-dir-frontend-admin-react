@@ -62,7 +62,7 @@ class TemplateComponent extends React.Component {
    * @return A promise
    */
   get_config() {
-    return fetch('/config.json')
+    return fetch('/admin/config.json')
       .then(function(response) {
         return response
                 .json()
