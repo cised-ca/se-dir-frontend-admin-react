@@ -12,6 +12,12 @@ class LoginPageComponent extends React.Component {
     super(props);
   }
 
+  componentWillMount() {
+    if (this.props.isLoggedIn) {
+      browserHistory.push('/admin/dashboard');
+    }
+  }
+
   render() {
     const api_root = this.context.config.api_root;
     const { t } = this.props;
