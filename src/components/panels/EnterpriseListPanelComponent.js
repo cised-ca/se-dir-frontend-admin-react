@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import { browserHistory } from 'react-router';
 
 require('styles/panels/EnterpriseListPanel.scss');
 
@@ -16,30 +17,40 @@ class EnterpriseListPanelComponent extends React.Component {
 
   getEnterpriseDetails(enterpriseId) {
     const apiRoot = this.context.config.api_root;
+    const status = this.state.status;
 
-    let locales = this.context.config.locales;
+    let statusEndpoint;
 
-    // Fetch enterprise details in all locales
-    // Note: we could defer this until the user clicks on a locale tab
-    //       if fetching all locales takes a long time
-    Promise.all(locales.map((locale) => {
-      return fetch(apiRoot + '/enterprise/' + enterpriseId + '?lang=' + locale.locale);
-    }))
-      .then((responses) => {
-        Promise.all(responses.map((response) => {
+    switch(status) {
+      case 'pending':
+        statusEndpoint = '/pending';
+        break;
+      case 'published':
+        statusEndpoint = '/complete';
+        break;
+      case 'unpublished':
+        statusEndpoint = '/unpublished';
+        break;
+      default:
+        this.context.logger.notify('Unknown enterprise status: ' + status);
+        statusEndpoint = '/complete';
+    }
+
+    fetch(apiRoot + '/enterprise/' + enterpriseId + statusEndpoint, {credentials: 'include'})
+      .then((response) => {
+        if (response.ok) {
           return response.json();
-        }))
-          .then((jsonArray) => {
-            // For each json obj in array, construct a superset obj containing the locale, I guess.
-            const i18nEnterprise = locales.map((locale, index) => {
-              return {
-                locale: locale,
-                enterprise: jsonArray[index]
-              };
-            });
+        }
 
-            this.props.handleEnterpriseClick(i18nEnterprise);
-          });
+        if (response.status == 403) {
+          browserHistory.push('/login');
+          return;
+        }
+
+        return Promise.reject(new Error('Response status: ' + response.status));
+      })
+      .then((enterprise) => {
+        this.props.handleEnterpriseClick(enterprise);
       })
       .catch((error) => {
         this.context.logger.notify(error);
@@ -47,12 +58,13 @@ class EnterpriseListPanelComponent extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const nextEnterprises = nextProps.enterprises;
-    const currEnterprises = this.state.enterprises;
+    let newEnterprises = (nextProps.enterprises !== this.state.enterprises),
+      newStatus = (nextProps.status !== this.state.status);
 
-    if (nextEnterprises.length !== currEnterprises.length) {
+    if (newEnterprises || newStatus) {
       this.setState({
-        enterprises: nextEnterprises
+        enterprises: nextProps.enterprises,
+        status: nextProps.status
       });
     }
   }
