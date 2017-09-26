@@ -7,6 +7,10 @@ i18n
     ns: ['common'],
     defaultNS: 'common',
 
+    backend: {
+      loadPath: '/admin/locales/{{lng}}/{{ns}}.json'
+    },
+
     fallbackLng: 'en',
 
     debug: true,

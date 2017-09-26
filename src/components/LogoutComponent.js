@@ -26,7 +26,7 @@ class LogoutComponent extends React.Component {
     .then(function(response) {
       if (response.ok) {
         component.props.setLoggedIn(false);
-        browserHistory.push('/');
+        browserHistory.push('/admin');
         return;
       }
       // TODO: handle the error!

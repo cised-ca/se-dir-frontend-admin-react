@@ -19,7 +19,7 @@ class AppComponent extends React.Component {
     return (
       <Router history={browserHistory}>
         <Route component={Template}
-          path='/'
+          path='/admin'
           onChange={(prevState, nextState) => {
             if (nextState.location.action !== 'POP') {
               window.scrollTo(0, 0);
@@ -27,9 +27,9 @@ class AppComponent extends React.Component {
           }}
       >
           <IndexRoute component={LoginPage} />
-          <Route name='account-page' path='/account' component={AccountPage} />
+          <Route name='account-page' path='account' component={AccountPage} />
 
-          <Route name='admin-dashboard' path='/dashboard' component={Dashboard} />
+          <Route name='admin-dashboard' path='dashboard' component={Dashboard} />
         </Route>
       </Router>
     );
