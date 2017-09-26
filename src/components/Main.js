@@ -11,6 +11,7 @@ import Template from './TemplateComponent.js';
 import LoginPage from './pages/LoginPageComponent.js';
 import AccountPage from './pages/AccountPageComponent.js';
 import Dashboard from './pages/DashboardComponent.js';
+import CreateEnterprisePage from './pages/CreateEnterprisePageComponent.js';
 
 import 'whatwg-fetch';
 
@@ -27,8 +28,9 @@ class AppComponent extends React.Component {
           }}
       >
           <IndexRoute component={LoginPage} />
-          <Route name='account-page' path='account' component={AccountPage} />
 
+          <Route name='account-page' path='account' component={AccountPage} />
+          <Route name='create-enterprise-page' path='create' component={CreateEnterprisePage} />
           <Route name='admin-dashboard' path='dashboard' component={Dashboard} />
         </Route>
       </Router>

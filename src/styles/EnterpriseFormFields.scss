@@ -1,1 +1,29 @@
-// Placeholder
+.enterpriseformfields-component {
+  /*
+    normalize.css conflicts with the following (sets "font: inherit") when we
+    remove the wrapping class specificity...
+  */
+
+  input,
+  textarea {
+    font-weight: normal;
+  }
+
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  input,
+  textarea {
+    display: block;
+    margin-top: 10px;
+    padding: 8px;
+    width: 100%;
+  }
+
+  textarea {
+    min-height: 100px;
+  }
+}
