@@ -8,6 +8,10 @@ body,
   height: 100%;
 }
 
+.page {
+  padding: 10px;
+}
+
 /* FIXME: move this to proper component */
 
 .panel {

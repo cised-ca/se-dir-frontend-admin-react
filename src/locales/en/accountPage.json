@@ -1,0 +1,9 @@
+{
+  "account": "Account",
+  "loading": "Loading...",
+  "noPermissions": "You currently have no permissions in the directory",
+  "editPermissions": "You have permission to edit the whole directory",
+  "editEnterprises": "You have permission to edit the following enterprises:",
+  "edit": "Edit"
+}
+

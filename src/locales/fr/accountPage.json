@@ -1,0 +1,9 @@
+{
+  "account": "FR: Account",
+  "loading": "FR: Loading...",
+  "noPermissions": "FR: You currently have no permissions in the directory",
+  "editPermissions": "FR: You have permission to edit the whole directory",
+  "editEnterprises": "FR: You have permission to edit the following enterprises:",
+  "edit": "FR: Edit"
+}
+
