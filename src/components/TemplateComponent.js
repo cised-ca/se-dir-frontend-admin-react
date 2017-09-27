@@ -38,7 +38,7 @@ class TemplateComponent extends React.Component {
   /**
    * Send errors to a logging system
    */
-  setup_error_logger() {
+  setupErrorLogger() {
     var config = this.state.config,
       logger;
 
@@ -61,7 +61,7 @@ class TemplateComponent extends React.Component {
    *
    * @return A promise
    */
-  get_config() {
+  getConfig() {
     return fetch('/admin/config.json')
       .then(function(response) {
         return response
@@ -81,7 +81,7 @@ class TemplateComponent extends React.Component {
     var app = this;
 
     app
-      .get_config()
+      .getConfig()
       .then(function(config) {
         let currentLocale = config.defaultLocale || 'en';
 
@@ -107,7 +107,7 @@ class TemplateComponent extends React.Component {
           {
             config: config
           },
-          app.setup_error_logger
+          app.setupErrorLogger
         );
       })
       .catch(function(reason) {

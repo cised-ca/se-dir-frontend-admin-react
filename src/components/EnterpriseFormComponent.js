@@ -40,21 +40,21 @@ class EnterpriseFormComponent extends React.Component {
     let enterprise = this.state.enterprise;
     const locale = this.state.locale;
     const endpoint = this.context.config.api_root + '/enterprise/' + enterprise.id;
-    let enterprise_final = {};
+    let enterpriseFinal = {};
 
-    let enterprise_copy = Object.assign({}, enterprise);
+    let enterpriseCopy = Object.assign({}, enterprise);
 
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    delete enterprise_copy.id;
-    delete enterprise_copy.locations;
+    delete enterpriseCopy.id;
+    delete enterpriseCopy.locations;
 
-    enterprise_final[locale] = enterprise_copy;
+    enterpriseFinal[locale] = enterpriseCopy;
 
     const request = new Request(endpoint, {
       method: 'PATCH',
-      body: JSON.stringify(enterprise_final),
+      body: JSON.stringify(enterpriseFinal),
       headers: headers
     });
 
@@ -82,22 +82,22 @@ class EnterpriseFormComponent extends React.Component {
       return;
     }
 
-    let curr_enterprise = this.state.enterprise;
-    curr_enterprise[target.name] = number;
+    let currEnterprise = this.state.enterprise;
+    currEnterprise[target.name] = number;
 
     this.setState({
-      enterprise: curr_enterprise
+      enterprise: currEnterprise
     });
   }
 
   handleStringInputChange(event) {
     const target = event.target;
 
-    let curr_enterprise = this.state.enterprise;
-    curr_enterprise[target.name] = target.value;
+    let currEnterprise = this.state.enterprise;
+    currEnterprise[target.name] = target.value;
 
     this.setState({
-      enterprise: curr_enterprise
+      enterprise: currEnterprise
     });
   }
 

@@ -21,14 +21,14 @@ class DashboardComponent extends React.Component {
   }
 
   getEnterpriseStatuses() {
-    const api_root = this.context.config.api_root;
+    const apiRoot = this.context.config.api_root;
     let component = this;
 
-    if (!api_root) {
+    if (!apiRoot) {
       return Promise.resolve(null);
     }
 
-    return fetch(api_root + '/account/enterpriseSummary', {credentials: 'same-origin'})
+    return fetch(apiRoot + '/account/enterpriseSummary', {credentials: 'same-origin'})
       .then((response) => {
 
           if (response.ok) {

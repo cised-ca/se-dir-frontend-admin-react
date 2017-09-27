@@ -15,7 +15,7 @@ class EnterpriseListPanelComponent extends React.Component {
   }
 
   getEnterpriseDetails(enterpriseId) {
-    const api_root = this.context.config.api_root;
+    const apiRoot = this.context.config.api_root;
 
     let locales = this.context.config.locales;
 
@@ -23,18 +23,18 @@ class EnterpriseListPanelComponent extends React.Component {
     // Note: we could defer this until the user clicks on a locale tab
     //       if fetching all locales takes a long time
     Promise.all(locales.map((locale) => {
-      return fetch(api_root + '/enterprise/' + enterpriseId + '?lang=' + locale.locale);
+      return fetch(apiRoot + '/enterprise/' + enterpriseId + '?lang=' + locale.locale);
     }))
       .then((responses) => {
         Promise.all(responses.map((response) => {
           return response.json();
         }))
-          .then((json_array) => {
+          .then((jsonArray) => {
             // For each json obj in array, construct a superset obj containing the locale, I guess.
             const i18nEnterprise = locales.map((locale, index) => {
               return {
                 locale: locale,
-                enterprise: json_array[index]
+                enterprise: jsonArray[index]
               };
             });
 
@@ -47,12 +47,12 @@ class EnterpriseListPanelComponent extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const next_enterprises = nextProps.enterprises;
-    const curr_enterprises = this.state.enterprises;
+    const nextEnterprises = nextProps.enterprises;
+    const currEnterprises = this.state.enterprises;
 
-    if (next_enterprises.length !== curr_enterprises.length) {
+    if (nextEnterprises.length !== currEnterprises.length) {
       this.setState({
-        enterprises: next_enterprises
+        enterprises: nextEnterprises
       });
     }
   }
