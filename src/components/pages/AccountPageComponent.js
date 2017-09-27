@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Link, browserHistory } from 'react-router';
-
+import { translate } from 'react-i18next';
 
 class AccountPageComponent extends React.Component {
 
@@ -58,7 +58,7 @@ class AccountPageComponent extends React.Component {
         // IF we get a 403 error, it means we're not logged in.
         // Set logged in to false and redirect to login page
         component.props.setLoggedIn(false);
-        browserHistory.push('/login');
+        browserHistory.push('/admin');
         return;
       }
       // TODO: handle the error!
@@ -96,18 +96,19 @@ class AccountPageComponent extends React.Component {
   }
 
   renderAuthenticatedEnterprises() {
+    const { t } = this.props;
     let permissions = [];
     permissions.push(
       this.state.authenticatedEnterprises.map(function(enterprise) {
         return (
           <li className='permission-item' key={enterprise.id}>{enterprise.name || 'ID: ' + enterprise.id}
-            <Link className="edit-enterprise" to={'/enterprise/' + enterprise.id}>Edit</Link>
+            <Link className="edit-enterprise" to={'/enterprise/' + enterprise.id}>{t('accountPage:edit')}</Link>
           </li>
         );
       })
     );
     return [
-      (<p key="perms">You have permission to edit the following enterprises:</p>),
+      (<p key="perms">{t('accountPage:editEnterprises')}</p>),
       (
       <ul className='permissions__list' key="permissions__list">
         {permissions}
@@ -116,15 +117,21 @@ class AccountPageComponent extends React.Component {
   }
 
   renderLoading() {
-    return (<li key="loading" >Loading...</li>);
+    const { t } = this.props;
+
+    return (<li key="loading" >{t('accountPage:loading')}</li>);
   }
 
   renderNoPermissions() {
-    return (<p>You currently have no permissions in the directory</p>);
+    const { t } = this.props;
+
+    return (<p>{t('accountPage:noPermissions')}</p>);
   }
 
   renderDirectoryAdmin() {
-    return (<p>You have permission to edit the whole directory</p>);
+    const { t } = this.props;
+
+    return (<p>{t('accountPage:editPermissions')}</p>);
   }
 
   renderPermissions() {
@@ -141,11 +148,12 @@ class AccountPageComponent extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
     let jsx = this.renderPermissions();
 
     return (
       <div className="accountpage-component page">
-        <h1>Account</h1>
+        <h1>{t('accountPage:account')}</h1>
         {jsx}
       </div>
     );
@@ -159,8 +167,4 @@ AccountPageComponent.contextTypes = {
 
 AccountPageComponent.displayName = 'AccountPageComponent';
 
-// Uncomment properties you need
-// AccountPageComponent.propTypes = {};
-// AccountPageComponent.defaultProps = {};
-
-export default AccountPageComponent;
+export default translate('accountPage')(AccountPageComponent);
