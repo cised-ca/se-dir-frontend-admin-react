@@ -23,7 +23,7 @@ class EnterpriseDetailsPanelComponent extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.enterprise[0].enterprise.name !== this.props.enterprise[0].enterprise.name) {
+    if (nextProps.enterprise.id !== this.props.enterprise.id) {
       this.setState({
         enterprise: nextProps.enterprise
       });
@@ -45,12 +45,11 @@ class EnterpriseDetailsPanelComponent extends React.Component {
 
   fillTabPanels() {
     const locales = this.context.config.locales;
-
-    const panels = locales.map((locale, index) => {
-      const enterpriseForm = <EnterpriseForm enterprise={this.state.enterprise[index].enterprise} locale={locale.locale} />
+    const panels = locales.map((locale) => {
+      const enterpriseForm = <EnterpriseForm enterprise={this.state.enterprise[locale.locale]} locale={locale.locale} />
 
       return (
-        <TabPanel key={'enterprise' + index}>{enterpriseForm}</TabPanel>
+        <TabPanel key={'enterprise-' + locale.locale}>{enterpriseForm}</TabPanel>
       );
     });
 
