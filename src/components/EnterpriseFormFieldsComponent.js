@@ -47,6 +47,8 @@ class EnterpriseFormFieldsComponent extends React.Component {
     this.setState({
       enterprise: currEnterprise
     });
+
+    this.updateParent();
   }
 
   handleStringInputChange(event) {
@@ -57,6 +59,15 @@ class EnterpriseFormFieldsComponent extends React.Component {
 
     this.setState({
       enterprise: currEnterprise
+    });
+
+    this.updateParent();
+  }
+
+  updateParent() {
+    this.props.updateParent({
+      enterprise: this.state.enterprise,
+      locale: this.state.locale
     });
   }
 

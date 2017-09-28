@@ -19,16 +19,14 @@ class EditEnterpriseFormComponent extends React.Component {
 
     this.state = {
       enterprise: props.enterprise,
-      locale: props.locale,
       modalIsOpen: false
     }
 
     this.closeModal = this.closeModal.bind(this);
     this.deleteEnterprise = this.deleteEnterprise.bind(this);
-    this.handleStringInputChange = this.handleStringInputChange.bind(this);
-    this.handleNumberInputChange = this.handleNumberInputChange.bind(this);
     this.handleSubmitForm = this.handleSubmitForm.bind(this);
     this.handleDeleteEnterprise = this.handleDeleteEnterprise.bind(this);
+    this.handleFormChange = this.handleFormChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -54,9 +52,10 @@ class EditEnterpriseFormComponent extends React.Component {
 
   fillTabPanels() {
     const locales = this.context.config.locales;
+
     const panels = locales.map((locale) => {
       const enterprise = this.state.enterprise[locale.locale];
-      const enterpriseFormFields = <EnterpriseFormFields enterprise={enterprise} locale={locale.locale} />
+      const enterpriseFormFields = <EnterpriseFormFields enterprise={enterprise} locale={locale.locale} updateParent={this.handleFormChange} />
 
       return (
         <TabPanel key={'enterprise-' + locale.locale}>
@@ -70,27 +69,34 @@ class EditEnterpriseFormComponent extends React.Component {
     return panels;
   }
 
+  handleFormChange(fieldsState) {
+    let newState = {};
+    newState[fieldsState.locale] = fieldsState.enterprise;
+
+    this.setState(newState);
+  }
+
   handleSubmitForm(event) {
     event.preventDefault();
 
-    let enterprise = this.state.enterprise;
-    const locale = this.state.locale;
-    const endpoint = this.context.config.api_root + '/enterprise/' + enterprise.id;
-    let enterpriseFinal = {};
+    const enterprise = this.state.enterprise;
+    let updatedEnterprise = {};
 
-    let enterpriseCopy = Object.assign({}, enterprise);
+    const locales = this.context.config.locales;
+    locales.map((locale) => {
+      updatedEnterprise[locale.locale] = enterprise[locale.locale];
+    });
+
+    updatedEnterprise.locations = enterprise.locations || [];
+
+    const endpoint = this.context.config.api_root + '/enterprise/' + enterprise.id;
 
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    delete enterpriseCopy.id;
-    delete enterpriseCopy.locations;
-
-    enterpriseFinal[locale] = enterpriseCopy;
-
     const request = new Request(endpoint, {
-      method: 'PATCH',
-      body: JSON.stringify(enterpriseFinal),
+      method: 'PUT',
+      body: JSON.stringify(enterprise),
       headers: headers
     });
 
@@ -101,40 +107,6 @@ class EditEnterpriseFormComponent extends React.Component {
       .catch((error) => {
         // TODO: Display error
       });
-  }
-
-  handleNumberInputChange(event) {
-    const target = event.target;
-
-    const filterInt = function(value) {
-      if (/^([0-9]+)$/.test(value))
-        return Number(value);
-      return NaN;
-    }
-
-    const number = filterInt(target.value);
-
-    if (isNaN(number)) {
-      return;
-    }
-
-    let currEnterprise = this.state.enterprise;
-    currEnterprise[target.name] = number;
-
-    this.setState({
-      enterprise: currEnterprise
-    });
-  }
-
-  handleStringInputChange(event) {
-    const target = event.target;
-
-    let currEnterprise = this.state.enterprise;
-    currEnterprise[target.name] = target.value;
-
-    this.setState({
-      enterprise: currEnterprise
-    });
   }
 
   deleteEnterprise() {
@@ -188,23 +160,23 @@ class EditEnterpriseFormComponent extends React.Component {
         >
 
           <h2 className='modal__title' ref={subtitle => this.subtitle = subtitle}>
-            {t('enterpriseForm:areYouSureDelete')} {enterprise.name}?
+            {t('editEnterpriseForm:areYouSureDelete')} {enterprise.name}?
           </h2>
 
           <p>
-            {t('enterpriseForm:youAreAboutToDelete')} {enterprise.name}. {t('enterpriseForm:thisCannotBeUndone')}
-            {t('enterpriseForm:areYouSureProceed')}
+            {t('editEnterpriseForm:youAreAboutToDelete')} {enterprise.name}. {t('editEnterpriseForm:thisCannotBeUndone')}
+            {t('editEnterpriseForm:areYouSureProceed')}
           </p>
 
           <input className='button button--destructive' name='delete'
             onClick={this.deleteEnterprise}
-            type='button' value={t('enterpriseForm:delete')} />
+            type='button' value={t('editEnterpriseForm:delete')} />
 
           <input className='button button--default' name='cancel'
             onClick={this.closeModal}
-            type='button' value={t('enterpriseForm:cancel')} />
+            type='button' value={t('editEnterpriseForm:cancel')} />
         </Modal>
-        
+
         <form onSubmit={this.handleSubmitForm}>
           <Tabs>
             <TabList>
