@@ -151,6 +151,8 @@ class EditEnterpriseFormComponent extends React.Component {
     const enterprise = this.state.enterprise;
     const { t } = this.props;
 
+    const currentLocale = this.context.config.currentLocale;
+
     return (
       <div className='editenterpriseform-component edit-enterprise-form'>
         <Modal
@@ -160,11 +162,11 @@ class EditEnterpriseFormComponent extends React.Component {
         >
 
           <h2 className='modal__title' ref={subtitle => this.subtitle = subtitle}>
-            {t('editEnterpriseForm:areYouSureDelete')} {enterprise.name}?
+            {t('editEnterpriseForm:areYouSureDelete')} {enterprise[currentLocale].name}?
           </h2>
 
           <p>
-            {t('editEnterpriseForm:youAreAboutToDelete')} {enterprise.name}. {t('editEnterpriseForm:thisCannotBeUndone')}
+            {t('editEnterpriseForm:youAreAboutToDelete')} {enterprise[currentLocale].name}. {t('editEnterpriseForm:thisCannotBeUndone')}
             {t('editEnterpriseForm:areYouSureProceed')}
           </p>
 

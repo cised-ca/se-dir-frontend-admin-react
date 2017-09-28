@@ -102,6 +102,7 @@ class TemplateComponent extends React.Component {
         }
 
         i18n.changeLanguage(currentLocale);
+        config.currentLocale = currentLocale;
 
         app.setState(
           {
