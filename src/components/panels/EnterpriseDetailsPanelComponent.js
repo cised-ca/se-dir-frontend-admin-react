@@ -1,15 +1,9 @@
 'use strict';
 
 import React from 'react';
-import Modal from 'react-modal';
 import { translate } from 'react-i18next';
 
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.scss';
-
-import EnterpriseForm from '../EnterpriseFormComponent';
-
-Modal.setAppElement('#app');
+import EditEnterpriseForm from '../EditEnterpriseFormComponent';
 
 require('styles/panels/EnterpriseDetailsPanel.scss');
 
@@ -30,45 +24,12 @@ class EnterpriseDetailsPanelComponent extends React.Component {
     }
   }
 
-  fillTabList() {
-    const locales = this.context.config.locales;
-    const { t } = this.props;
-
-    const tabs = locales.map((locale) => {
-      return (
-        <Tab key={locale.locale}>{t('enterpriseDetailsPanel:' + locale.name)}</Tab>
-      );
-    });
-
-    return tabs;
-  }
-
-  fillTabPanels() {
-    const locales = this.context.config.locales;
-    const panels = locales.map((locale) => {
-      const enterpriseForm = <EnterpriseForm enterprise={this.state.enterprise[locale.locale]} locale={locale.locale} />
-
-      return (
-        <TabPanel key={'enterprise-' + locale.locale}>{enterpriseForm}</TabPanel>
-      );
-    });
-
-    return panels;
-  }
-
   render() {
-    const tabs = this.fillTabList();
-    const panels = this.fillTabPanels(false);
+    const enterprise = this.state.enterprise;
 
     return (
       <div className="panel panel--wide enterprisedetailspanel-component">
-        <Tabs>
-          <TabList>
-            {tabs}
-          </TabList>
-
-          {panels}
-        </Tabs>
+        <EditEnterpriseForm enterprise={enterprise} />
       </div>
     );
   }

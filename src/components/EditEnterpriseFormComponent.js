@@ -4,11 +4,16 @@ import React from 'react';
 import Modal from 'react-modal';
 import { translate } from 'react-i18next';
 
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.scss';
+
+import EnterpriseFormFields from './EnterpriseFormFieldsComponent';
+
 Modal.setAppElement('#app');
 
-require('styles/EnterpriseForm.scss');
+require('styles/EditEnterpriseForm.scss');
 
-class EnterpriseFormComponent extends React.Component {
+class EditEnterpriseFormComponent extends React.Component {
   constructor(props) {
     super(props);
 
@@ -27,11 +32,42 @@ class EnterpriseFormComponent extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.enterprise.name !== this.props.enterprise.name) {
+    if (nextProps.enterprise.id !== this.props.enterprise.id) {
       this.setState({
         enterprise: nextProps.enterprise
       });
     }
+  }
+
+  fillTabList() {
+    const locales = this.context.config.locales;
+    const { t } = this.props;
+
+    const tabs = locales.map((locale) => {
+      return (
+        <Tab key={locale.locale}>{t('enterpriseDetailsPanel:' + locale.name)}</Tab>
+      );
+    });
+
+    return tabs;
+  }
+
+  fillTabPanels() {
+    const locales = this.context.config.locales;
+    const panels = locales.map((locale) => {
+      const enterprise = this.state.enterprise[locale.locale];
+      const enterpriseFormFields = <EnterpriseFormFields enterprise={enterprise} locale={locale.locale} />
+
+      return (
+        <TabPanel key={'enterprise-' + locale.locale}>
+          <h1>{enterprise.name}</h1>
+
+          {enterpriseFormFields}
+        </TabPanel>
+      );
+    });
+
+    return panels;
   }
 
   handleSubmitForm(event) {
@@ -137,12 +173,14 @@ class EnterpriseFormComponent extends React.Component {
   }
 
   render() {
+    const tabs = this.fillTabList();
+    const panels = this.fillTabPanels();
+
     const enterprise = this.state.enterprise;
     const { t } = this.props;
 
     return (
-      <div className='enterpriseform-component enterprise-form'>
-
+      <div className='editenterpriseform-component edit-enterprise-form'>
         <Modal
           isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
@@ -166,100 +204,32 @@ class EnterpriseFormComponent extends React.Component {
             onClick={this.closeModal}
             type='button' value={t('enterpriseForm:cancel')} />
         </Modal>
-      
-        <h1>{enterprise.name}</h1>
-
+        
         <form onSubmit={this.handleSubmitForm}>
-          <label>
-            {t('enterpriseForm:enterpriseName')}
-            <input
-              name='name'
-              onChange={this.handleStringInputChange}
-              required
-              value={enterprise.name || ''} />
-          </label>
+          <Tabs>
+            <TabList>
+              {tabs}
+            </TabList>
 
-          <label>
-            {t('enterpriseForm:shortDescription')}
-            <input
-              name='short_description'
-              onChange={this.handleStringInputChange}
-              value={enterprise.short_description || ''} />
-          </label>
+            {panels}
+          </Tabs>
 
-          <label>
-            {t('enterpriseForm:description')}
-            <textarea
-              name='description'
-              onChange={this.handleStringInputChange}
-              value={enterprise.description || ''} />
-          </label>
-
-          <label>
-            {t('enterpriseForm:yearStarted')}
-            <input
-              name='year_started'
-              onChange={this.handleNumberInputChange}
-              value={enterprise.year_started || ''} />
-          </label>
-
-          <label>
-            {t('enterpriseForm:offering')}
-            <input
-              name='offering'
-              onChange={this.handleStringInputChange}
-              value={enterprise.offering || ''} />
-          </label>
-
-          <label>
-            {t('enterpriseForm:website')}
-            <input
-              name='website'
-              onChange={this.handleStringInputChange}
-              type='url'
-              value={enterprise.website || ''} />
-          </label>
-
-          <label>
-            {t('enterpriseForm:facebookUsername')}
-            <input
-              name='facebook'
-              onChange={this.handleStringInputChange}
-              value={enterprise.facebook || ''} />
-          </label>
-
-          <label>
-            {t('enterpriseForm:instagramUsername')}
-            <input
-              name='instagram'
-              onChange={this.handleStringInputChange}
-              value={enterprise.instagram || ''} />
-          </label>
-
-          <label>
-            {t('enterpriseForm:twitterUsername')}
-            <input
-              name='twitter'
-              onChange={this.handleStringInputChange}
-              value={enterprise.twitter || ''} />
-          </label>
-          
-          <input className='button button--primary' type='submit' value={t('enterpriseForm:save')} />
+          <input className='button button--primary' type='submit' value={t('editEnterpriseForm:save')} />
 
           <input className='button button--destructive' name='delete'
             onClick={this.handleDeleteEnterprise}
-            type='button' value={t('enterpriseForm:delete')} />
+            type='button' value={t('editEnterpriseForm:delete')} />
         </form>
       </div>
     );
   }
 }
 
-EnterpriseFormComponent.displayName = 'EnterpriseFormComponent';
+EditEnterpriseFormComponent.displayName = 'EditEnterpriseFormComponent';
 
-EnterpriseFormComponent.contextTypes = {
+EditEnterpriseFormComponent.contextTypes = {
   'config': React.PropTypes.object,
   'logger': React.PropTypes.object
 };
 
-export default translate('enterpriseForm')(EnterpriseFormComponent);
+export default translate('editEnterpriseForm')(EditEnterpriseFormComponent);
