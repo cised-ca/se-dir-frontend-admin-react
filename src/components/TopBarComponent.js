@@ -18,10 +18,13 @@ class TopBarComponent extends React.Component {
       jsx = (
         <nav className="nav nav--top">
           <ul className="nav__items">
+            <li className="nav__item" key="CreateEnterprise">
+              <Link className="nav__link" to="/admin/create">{t('topBar:createEnterprise')}</Link>
+            </li>
             <li className="nav__item" key="Account">
               <Link className="nav__link" to="/admin/account">{t('topBar:account')}</Link>
             </li>
-            <li className="nav__item" key="SignOut">
+            <li className="nav__item nav__item--logout" key="SignOut">
               <Logout className="nav__link" setLoggedIn={this.props.setLoggedIn}/>
             </li>
           </ul>
@@ -37,8 +40,8 @@ class TopBarComponent extends React.Component {
 
     return (
       <div className="topbar-component top-bar">
-        <header>
-          <h1>
+        <header className="site-header">
+          <h1 className="top-bar__title">
             <Link to="/admin">{t('topBar:adminDashboard')}</Link>
           </h1>
 

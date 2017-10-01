@@ -1,20 +1,24 @@
 .top-bar {
-  
   $primary-color: #00aa51; // CSED green
   $primary-color-dark: #094; // Darker green for hover/active states
 
-  background: #094;
-  padding: 8px 10px;
+  .site-header {
+    display: flex;
+  }
+
+  background: $primary-color;
+  padding: 0 10px;
 
   header {
     overflow: hidden;
   }
 
-  h1 {
+  .top-bar__title {
     color: #fff;
+    flex: 1;
     float: left;
     margin: 0;
-    padding: 0;
+    padding: 15px 0;
 
     a[href] {
       color: #fff;
@@ -27,29 +31,53 @@
     }
   }
 
+  .nav--top {
+    align-items: stretch;
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
   .nav__items {
-    display: inline-block;
-    float: right;
+    align-items: stretch;
+    display: flex;
     margin: 0;
     padding: 0;
   }
 
   .nav__item {
-    display: inline-block;
+    display: flex;
+  }
+
+  .nav__item--logout .logout-component {
+      display: flex;
+
+      .button--logout {
+        align-items: center;
+        display: flex;
+        padding: 0 8px;
+
+        &:focus,
+        &:hover {
+          background: $primary-color-dark;
+        }
+      }
   }
 
   .nav__link {
-    display: inline-block;
+    align-items: center;
+    display: flex;
     font-family: "helvetica-black";
     font-weight: 400;
-    margin-right: 10px;
-    padding: 13px 8px 8px;
+    padding: 0 8px;
     text-decoration: none;
     text-transform: uppercase;
-  }
 
-  .nav__link:hover {
-    text-decoration: underline;
+    &:focus,
+    &:hover {
+      background: $primary-color-dark;
+      text-decoration: underline;
+    }
   }
 
   .nav__link:link,
