@@ -1,11 +1,11 @@
 {
-  "enterpriseName": "FR: Enterprise name:",
-  "shortDescription": "FR: Short description:",
-  "description": "FR: Description:",
-  "yearStarted": "FR: Year started:",
-  "offering": "FR: Offering:",
-  "website": "FR: Website:",
-  "facebookUsername": "FR: Facebook username:",
-  "instagramUsername": "FR: Instagram username:",
-  "twitterUsername": "FR: Twitter username:"
+  "enterpriseName": "Nom de l'entreprise :",
+  "shortDescription": "Description courte :",
+  "description": "Description :",
+  "yearStarted": "Année de fondation :",
+  "offering": "Offres :",
+  "website": "Site web :",
+  "facebookUsername": "Nom d'utilisateur Facebook :",
+  "instagramUsername": "Nom d'utilisateur Instagram :",
+  "twitterUsername": "Nom d'utilisateur Twitter :"
 }
