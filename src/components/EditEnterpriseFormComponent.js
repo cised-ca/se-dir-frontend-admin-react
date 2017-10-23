@@ -9,6 +9,7 @@ import 'react-tabs/style/react-tabs.scss';
 
 import EnterpriseFormFields from './EnterpriseFormFieldsComponent';
 import UploadLogo from './UploadLogoComponent';
+import EnterpriseAdmins from './EnterpriseAdminsComponent';
 
 Modal.setAppElement('#app');
 
@@ -220,6 +221,8 @@ class EditEnterpriseFormComponent extends React.Component {
               <h1>{t('editEnterpriseForm:settings')}</h1>
 
               <UploadLogo enterpriseId={this.state.enterprise.id} />
+
+              <EnterpriseAdmins enterpriseId={this.state.enterprise.id} />
             </TabPanel>
           </Tabs>
 
