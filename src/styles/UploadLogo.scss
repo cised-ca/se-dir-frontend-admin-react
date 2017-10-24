@@ -1,0 +1,20 @@
+.uploadlogo-component {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  [type="file"] {
+    display: none;
+  }
+
+  .logo-preview {
+    cursor: pointer;
+    display: block;
+    height: 140px;
+    margin-bottom: 20px;
+    width: 140px;
+  }
+}

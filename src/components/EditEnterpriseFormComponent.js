@@ -8,6 +8,8 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.scss';
 
 import EnterpriseFormFields from './EnterpriseFormFieldsComponent';
+import UploadLogo from './UploadLogoComponent';
+import EnterpriseAdmins from './EnterpriseAdminsComponent';
 
 Modal.setAppElement('#app');
 
@@ -27,6 +29,7 @@ class EditEnterpriseFormComponent extends React.Component {
     this.handleSubmitForm = this.handleSubmitForm.bind(this);
     this.handleDeleteEnterprise = this.handleDeleteEnterprise.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
+    this.handleTabSelect = this.handleTabSelect.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -67,6 +70,12 @@ class EditEnterpriseFormComponent extends React.Component {
     });
 
     return panels;
+  }
+
+  handleTabSelect(index) {
+    this.setState({
+      'selectedTab': index
+    });
   }
 
   handleFormChange(fieldsState) {
@@ -144,9 +153,29 @@ class EditEnterpriseFormComponent extends React.Component {
     this.setState({modalIsOpen: false});
   }
 
+  formButtons() {
+    let jsx = null;
+    const { t } = this.props;
+
+    if ( this.state.selectedTab !== 2 ) {
+      jsx = (
+        <div>
+          <input className='button button--primary' type='submit' value={t('editEnterpriseForm:save')} />
+
+          <input className='button button--destructive' name='delete'
+            onClick={this.handleDeleteEnterprise}
+            type='button' value={t('editEnterpriseForm:delete')} />
+        </div>
+      );
+    }
+
+    return jsx;
+  }
+
   render() {
     const tabs = this.fillTabList();
     const panels = this.fillTabPanels();
+    const buttons = this.formButtons();
 
     const enterprise = this.state.enterprise;
     const { t } = this.props;
@@ -180,19 +209,24 @@ class EditEnterpriseFormComponent extends React.Component {
         </Modal>
 
         <form onSubmit={this.handleSubmitForm}>
-          <Tabs>
+          <Tabs onSelect={this.handleTabSelect}>
             <TabList>
               {tabs}
+              <Tab>{t('editEnterpriseForm:settings')}</Tab>
             </TabList>
 
             {panels}
+
+            <TabPanel>
+              <h1>{t('editEnterpriseForm:settings')}</h1>
+
+              <UploadLogo enterpriseId={this.state.enterprise.id} />
+
+              <EnterpriseAdmins enterpriseId={this.state.enterprise.id} />
+            </TabPanel>
           </Tabs>
 
-          <input className='button button--primary' type='submit' value={t('editEnterpriseForm:save')} />
-
-          <input className='button button--destructive' name='delete'
-            onClick={this.handleDeleteEnterprise}
-            type='button' value={t('editEnterpriseForm:delete')} />
+          {buttons}
         </form>
       </div>
     );
