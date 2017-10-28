@@ -1,0 +1,27 @@
+.successful-login-page {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.button {
+    display: block;
+    margin-top: 10px;
+    padding: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.button--primary {
+  background-color: #337ab7;
+  border: 1px solid #2e6da4;
+  color: #fff;
+
+  &:hover {
+    background-color: #286090;
+    border-color: #204d74;
+    text-decoration: underline;
+  }
+}

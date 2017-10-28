@@ -9,6 +9,7 @@ import React from 'react';
 import { browserHistory, Router, Route, IndexRoute } from 'react-router';
 import Template from './TemplateComponent.js';
 import LoginPage from './pages/LoginPageComponent.js';
+import SuccessfulLoginLandingPage from './pages/SuccessfulLoginLandingPageComponent.js';
 import AccountPage from './pages/AccountPageComponent.js';
 import Dashboard from './pages/DashboardComponent.js';
 import CreateEnterprisePage from './pages/CreateEnterprisePageComponent.js';
@@ -29,6 +30,7 @@ class AppComponent extends React.Component {
       >
           <IndexRoute component={LoginPage} />
 
+          <Route name='successful-login-landing-page' path='successful-login' component={SuccessfulLoginLandingPage} />
           <Route name='account-page' path='account' component={AccountPage} />
           <Route name='create-enterprise-page' path='create' component={CreateEnterprisePage} />
           <Route name='admin-dashboard' path='dashboard' component={Dashboard} />
