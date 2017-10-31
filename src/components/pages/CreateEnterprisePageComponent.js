@@ -8,6 +8,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.scss';
 
 import EnterpriseFormFields from '../EnterpriseFormFieldsComponent';
+import ModalError from '../ModalErrorComponent';
 
 import api from '../api/api.js';
 
@@ -18,6 +19,7 @@ class CreateEnterprisePageComponent extends React.Component {
   constructor(props, context) {
     super(props);
 
+    this.clearModalError = this.clearModalError.bind(this);
     this.handleSubmitForm = this.handleSubmitForm.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
@@ -38,6 +40,12 @@ class CreateEnterprisePageComponent extends React.Component {
     if (!this.props.isLoggedIn) {
       browserHistory.push('/admin');
     }
+  }
+
+  clearModalError() {
+      this.setState({
+        error: null
+    });
   }
 
   handleCancel() {
@@ -67,11 +75,19 @@ class CreateEnterprisePageComponent extends React.Component {
     // updatedEnterprise.locations = enterprise.locations || [];
 
     api.createEnterprise(apiRoot, updatedEnterprise)
-      .then((response) => {
-        // TODO: Display success
+      .then(() => {
+        browserHistory.push('/admin/dashboard');
       })
-      .catch((error) => {
-        // TODO: Display error
+      .catch(error => {
+          const errorModal = (
+            <ModalError clearError={this.clearModalError}>
+              {error.message}
+            </ModalError>
+          );
+
+          this.setState({
+            error: errorModal
+          });
       });
   }
 
@@ -110,11 +126,14 @@ class CreateEnterprisePageComponent extends React.Component {
   render() {
     const tabs = this.fillTabList();
     const panels = this.fillTabPanels();
+    const error = this.state.error;
 
     const { t } = this.props;
 
     return (
       <div className="createenterprisepage-component create-enterprise-page">
+        {error}
+
         <form onSubmit={this.handleSubmitForm}>
           <Tabs>
             <TabList>

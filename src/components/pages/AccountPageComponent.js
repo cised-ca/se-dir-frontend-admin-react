@@ -6,8 +6,6 @@ import { translate } from 'react-i18next';
 
 import api from '../api/api.js';
 
-// const api = require('../api/api.js');
-
 class AccountPageComponent extends React.Component {
 
   constructor() {

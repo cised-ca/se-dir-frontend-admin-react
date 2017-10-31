@@ -79,6 +79,7 @@ class PanelListComponent extends React.Component {
     if (activePanel >= 3) {
       jsx.push(<EnterpriseDetailsPanel key="enterprise-details"
         setActivePanel={this.setActivePanel}
+        enterpriseStatus={this.state.status}
         enterprise={this.state.enterpriseDetails}
         refreshData={this.refreshData} />);
     }

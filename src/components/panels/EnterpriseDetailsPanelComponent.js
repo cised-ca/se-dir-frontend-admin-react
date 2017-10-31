@@ -12,7 +12,8 @@ class EnterpriseDetailsPanelComponent extends React.Component {
     super(props);
 
     this.state = {
-      enterprise: props.enterprise
+      enterprise: props.enterprise,
+      enterpriseStatus: props.enterpriseStatus
     };
   }
 
@@ -26,10 +27,12 @@ class EnterpriseDetailsPanelComponent extends React.Component {
 
   render() {
     const enterprise = this.state.enterprise;
+    const status = this.state.enterpriseStatus;
 
     return (
       <div className="panel panel--wide enterprisedetailspanel-component">
-        <EditEnterpriseForm enterprise={enterprise} />
+        <EditEnterpriseForm enterprise={enterprise} enterpriseStatus={status}
+          setActivePanel={this.props.setActivePanel} refreshData={this.props.refreshData} />
       </div>
     );
   }

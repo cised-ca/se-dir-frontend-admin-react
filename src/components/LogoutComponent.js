@@ -7,8 +7,6 @@ import {browserHistory} from 'react-router';
 
 import api from './api/api.js';
 
-// const api = require('./api/api.js');
-
 require('styles/Logout.scss');
 
 class LogoutComponent extends React.Component {
@@ -28,9 +26,11 @@ class LogoutComponent extends React.Component {
     api.logout(apiRoot)
       .then(() => {
         this.props.setLoggedIn(false);
-        browserHistory.push('/admin')
+        browserHistory.push('/admin');
       })
       .catch((error) => {
+        this.props.setLoggedIn(false);
+        browserHistory.push('/admin');
         this.context.logger.notify('Error while logging out: ' + error.message);
       })
   }

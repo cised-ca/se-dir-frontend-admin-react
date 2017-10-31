@@ -10,6 +10,8 @@ import 'react-tabs/style/react-tabs.scss';
 import EnterpriseFormFields from './EnterpriseFormFieldsComponent';
 import UploadLogo from './UploadLogoComponent';
 import EnterpriseAdmins from './EnterpriseAdminsComponent';
+import FlashMessage from './FlashMessageComponent';
+import ModalError from './ModalErrorComponent';
 
 import api from './api/api.js';
 
@@ -22,11 +24,14 @@ class EditEnterpriseFormComponent extends React.Component {
     super(props);
 
     this.state = {
+      error: null,
       enterprise: props.enterprise,
+      enterpriseStatus: props.enterpriseStatus,
       modalIsOpen: false
     }
 
     this.closeModal = this.closeModal.bind(this);
+    this.clearModalError = this.clearModalError.bind(this);
     this.deleteEnterprise = this.deleteEnterprise.bind(this);
     this.handleSubmitForm = this.handleSubmitForm.bind(this);
     this.handleDeleteEnterprise = this.handleDeleteEnterprise.bind(this);
@@ -40,6 +45,12 @@ class EditEnterpriseFormComponent extends React.Component {
         enterprise: nextProps.enterprise
       });
     }
+  }
+
+  clearModalError() {
+      this.setState({
+        error: null
+    });
   }
 
   fillTabList() {
@@ -99,33 +110,60 @@ class EditEnterpriseFormComponent extends React.Component {
       updatedEnterprise[locale.locale] = enterprise[locale.locale];
     });
 
+    const { t } = this.props;
+
     // TODO
     // updatedEnterprise.locations = enterprise.locations || [];
 
     api.editEnterprise(apiRoot, enterprise.id, updatedEnterprise)
       .then(() => {
-          // TODO: Display success
+          const flashMessage = (
+            <FlashMessage type="success">
+              {t('common:enterpriseEditSucess')}
+            </FlashMessage>
+          );
+
+          this.setState({
+            flashMessage: flashMessage
+          });
       })
       .catch(error => {
-          this.context.logger.notify(error.message);
+          const errorModal = (
+            <ModalError clearError={this.clearModalError}>
+              {t('common:enterpriseEditError')} "{error.message}"
+            </ModalError>
+          );
+
+          this.setState({
+            error: errorModal
+          });
       });
   }
 
   deleteEnterprise() {
     const enterprise = this.state.enterprise;
+    const enterpriseStatus = this.state.enterpriseStatus;
     const apiRoot = this.context.config.api_root;
 
-    api.deleteEnterprise(apiRoot, enterprise.id)
+    api.deleteEnterprise(apiRoot, enterprise.id, enterpriseStatus)
       .then(() => {
-        // TODO: Display success
-        // TODO: Refresh list of enterprises
         this.props.setActivePanel(2);
         this.props.refreshData();
       })
       .catch(error => {
-        // TODO: display error
-        this.context.logger.notify(error.message);
+          const errorModal = (
+            <ModalError clearError={this.clearModalError}>
+              {error.message}
+            </ModalError>
+          );
+
+          this.setState({
+            error: errorModal
+          });
       });
+
+      // Close the "Are you sure" modal
+      this.closeModal();
   }
 
   handleDeleteEnterprise(event) {
@@ -172,6 +210,9 @@ class EditEnterpriseFormComponent extends React.Component {
 
     return (
       <div className='editenterpriseform-component edit-enterprise-form'>
+        {this.state.error}
+        {this.state.flashMessage}
+
         <Modal
           isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
@@ -179,11 +220,14 @@ class EditEnterpriseFormComponent extends React.Component {
         >
 
           <h2 className='modal__title' ref={subtitle => this.subtitle = subtitle}>
-            {t('editEnterpriseForm:areYouSureDelete')} {enterprise[currentLocale].name}?
+            {t('editEnterpriseForm:areYouSureDelete')} "{enterprise[currentLocale].name}"?
           </h2>
 
           <p>
-            {t('editEnterpriseForm:youAreAboutToDelete')} {enterprise[currentLocale].name}. {t('editEnterpriseForm:thisCannotBeUndone')}
+            {t('editEnterpriseForm:youAreAboutToDelete')} "{enterprise[currentLocale].name}". {t('editEnterpriseForm:thisCannotBeUndone')}
+          </p>
+
+          <p>
             {t('editEnterpriseForm:areYouSureProceed')}
           </p>
 

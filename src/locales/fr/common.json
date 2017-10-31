@@ -1,0 +1,11 @@
+{
+  "enterpriseEditSucess": "Enterprise modifié avec succès.",
+  "enterpriseEditError": "Une erreur est survenue lors de l'édition de l'entreprise :",
+  "updateEnterpriseAdminsSuccess": "Administrateurs mis à jour avec succès",
+  "deleteLogoSuccess": "Logo supprimé avec succès.",
+  "deleteLogoError": "Une erreur est survenue lors de la suppression du logo :",
+  "noFilesSelected": "Aucun fichier sélectionné.",
+  "invalidFileType": "Type de fichier invalide.",
+  "updateLogoSuccess": "Logo mis à jour avec succès.",
+  "updateLogoError": "Une erreur est survenue lors de la mise à jour du logo :"
+}

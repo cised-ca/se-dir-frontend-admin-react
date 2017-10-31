@@ -1,5 +1,25 @@
 import 'whatwg-fetch';
 
+function getEndpointFromStatus(status) {
+    let statusEndpoint;
+
+    switch(status) {
+      case 'pending':
+        statusEndpoint = '/pending';
+        break;
+      case 'published':
+        statusEndpoint = '/complete';
+        break;
+      case 'unpublished':
+        statusEndpoint = '/unpublished';
+        break;
+      default:
+        statusEndpoint = '/complete';
+    }
+
+    return statusEndpoint;
+}
+
 const api = {
   logout: function(apiRoot) {
     const url = apiRoot + '/account/logout';
@@ -77,22 +97,7 @@ const api = {
   },
 
   getEnterpriseDetails: function(apiRoot, enterpriseId, status) {
-    let statusEndpoint;
-
-    switch(status) {
-      case 'pending':
-        statusEndpoint = '/pending';
-        break;
-      case 'published':
-        statusEndpoint = '/complete';
-        break;
-      case 'unpublished':
-        statusEndpoint = '/unpublished';
-        break;
-      default:
-        statusEndpoint = '/complete';
-    }
-
+    const statusEndpoint = getEndpointFromStatus(status);
     const url = apiRoot + '/enterprise/' + enterpriseId + statusEndpoint;
 
     return fetch(url, {credentials: 'include'})
@@ -251,10 +256,13 @@ const api = {
           return Promise.resolve();
         }
 
-        return Promise.reject({
-          status: response.status,
-          message: response.statusText
-        });
+        return response.json()
+          .then(json => {
+            return Promise.reject({
+              status: response.status,
+              message: json.errors[0].errors[0].message
+            });
+          });
       })
       .catch(error => {
         return Promise.reject({
@@ -295,8 +303,14 @@ const api = {
       });
   },
 
-  deleteEnterprise: function(apiRoot, enterpriseId) {
-    const url = apiRoot + '/enterprise/' + enterpriseId;
+  deleteEnterprise: function(apiRoot, enterpriseId, status) {
+    let statusEndpoint = getEndpointFromStatus(status);
+
+    if (statusEndpoint === '/complete') {
+      statusEndpoint = '';
+    }
+
+    const url = apiRoot + '/enterprise/' + enterpriseId + statusEndpoint;
 
     const request = new Request(url, {
       method: 'DELETE'

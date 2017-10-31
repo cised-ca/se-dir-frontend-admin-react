@@ -56,7 +56,6 @@ class DashboardComponent extends React.Component {
         });
       })
       .catch((err) => {
-        // TODO: display error
         this.context.logger.notify('refresh data fail...: ' + err);
       });
   }
