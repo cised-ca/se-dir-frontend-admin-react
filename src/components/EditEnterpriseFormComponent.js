@@ -11,6 +11,8 @@ import EnterpriseFormFields from './EnterpriseFormFieldsComponent';
 import UploadLogo from './UploadLogoComponent';
 import EnterpriseAdmins from './EnterpriseAdminsComponent';
 
+import api from './api/api.js';
+
 Modal.setAppElement('#app');
 
 require('styles/EditEnterpriseForm.scss');
@@ -88,6 +90,7 @@ class EditEnterpriseFormComponent extends React.Component {
   handleSubmitForm(event) {
     event.preventDefault();
 
+    const apiRoot = this.context.config.api_root;
     const enterprise = this.state.enterprise;
     let updatedEnterprise = {};
 
@@ -96,48 +99,33 @@ class EditEnterpriseFormComponent extends React.Component {
       updatedEnterprise[locale.locale] = enterprise[locale.locale];
     });
 
-    updatedEnterprise.locations = enterprise.locations || [];
+    // TODO
+    // updatedEnterprise.locations = enterprise.locations || [];
 
-    const endpoint = this.context.config.api_root + '/enterprise/' + enterprise.id;
-
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-    const request = new Request(endpoint, {
-      method: 'PUT',
-      body: JSON.stringify(enterprise),
-      headers: headers
-    });
-
-    fetch(request, {credentials: 'same-origin'})
-      .then((response) => {
-        // TODO: Display success
+    api.editEnterprise(apiRoot, enterprise.id, updatedEnterprise)
+      .then(() => {
+          // TODO: Display success
       })
-      .catch((error) => {
-        // TODO: Display error
+      .catch(error => {
+          this.context.logger.notify(error.message);
       });
   }
 
   deleteEnterprise() {
     const enterprise = this.state.enterprise;
-    const endpoint = this.context.config.api_root + '/enterprise/' + enterprise.id;
+    const apiRoot = this.context.config.api_root;
 
-    const request = new Request(endpoint, {
-      method: 'DELETE'
-    });
-
-    fetch(request, {credentials: 'same-origin'})
-      .then((response) => {
+    api.deleteEnterprise(apiRoot, enterprise.id)
+      .then(() => {
         // TODO: Display success
         // TODO: Refresh list of enterprises
-
-        // Set active panel to the enterprise list
         this.props.setActivePanel(2);
         this.props.refreshData();
       })
-      .catch((error) => {
-        // TODO: Display error
-    });
+      .catch(error => {
+        // TODO: display error
+        this.context.logger.notify(error.message);
+      });
   }
 
   handleDeleteEnterprise(event) {

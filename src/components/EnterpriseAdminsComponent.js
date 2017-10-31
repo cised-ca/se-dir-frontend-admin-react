@@ -3,7 +3,7 @@
 import React from 'react';
 import { translate } from 'react-i18next';
 
-import 'whatwg-fetch';
+import api from './api/api.js';
 
 require('styles/EnterpriseAdmins.scss');
 
@@ -27,22 +27,16 @@ class EnterpriseAdminsComponent extends React.Component {
 
   componentDidMount() {
     const enterpriseId = this.state.enterpriseId;
-    const endpoint = this.context.config.api_root + '/enterprise/' +
-      enterpriseId + '/admin';
+    const apiRoot = this.context.config.api_root;
 
-    fetch(endpoint, {credentials: 'same-origin'})
-      .then((response) => {
-        if (response.ok) {
-          response.json()
-            .then((json) => {
-              this.setState({
-                'admins': json.admin_emails.join('\n')
-              });
-            });
-        }
+    api.getEnterpriseAdministrators(apiRoot, enterpriseId)
+      .then(json => {
+        this.setState({
+          'admins': json.admin_emails.join('\n')
+        });
       })
-      .catch((error) => {
-        // TODO: Display error
+      .catch(error => {
+        this.context.logger.notify(error.message);
       });
   }
 
@@ -50,26 +44,16 @@ class EnterpriseAdminsComponent extends React.Component {
     event.preventDefault();
 
     const enterpriseId = this.state.enterpriseId;
-    const endpoint = this.context.config.api_root + '/enterprise/' +
-      enterpriseId + '/admin';
+    const apiRoot = this.context.config.api_root;
     const newAdmins = {
       'admin_emails': this.state.admins.split('\n')
     };
 
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-    const request = new Request(endpoint, {
-      method: 'PATCH',
-      body: JSON.stringify(newAdmins),
-      headers: headers
-    });
-
-    fetch(request, {credentials: 'same-origin'})
-      .then((response) => {
+    api.updateEnterpriseAdministrators(apiRoot, enterpriseId, newAdmins)
+      .then(response => {
         // TODO: Display success
       })
-      .catch((error) => {
+      .catch(error => {
         // TODO: Display error
       });
   }

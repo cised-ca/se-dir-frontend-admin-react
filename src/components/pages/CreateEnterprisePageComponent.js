@@ -9,6 +9,8 @@ import 'react-tabs/style/react-tabs.scss';
 
 import EnterpriseFormFields from '../EnterpriseFormFieldsComponent';
 
+import api from '../api/api.js';
+
 require('styles/pages/CreateEnterprisePage.scss');
 
 class CreateEnterprisePageComponent extends React.Component {
@@ -52,8 +54,7 @@ class CreateEnterprisePageComponent extends React.Component {
   handleSubmitForm(event) {
     event.preventDefault();
 
-    const endpoint = this.context.config.api_root + '/enterprise';
-
+    const apiRoot = this.context.config.api_root;
     const enterprise = this.state.enterprise;
     let updatedEnterprise = {};
 
@@ -65,16 +66,7 @@ class CreateEnterprisePageComponent extends React.Component {
     // TODO: locations
     // updatedEnterprise.locations = enterprise.locations || [];
 
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-    const request = new Request(endpoint, {
-      method: 'POST',
-      body: JSON.stringify(updatedEnterprise),
-      headers: headers
-    });
-
-    fetch(request, {credentials: 'same-origin'})
+    api.createEnterprise(apiRoot, updatedEnterprise)
       .then((response) => {
         // TODO: Display success
       })

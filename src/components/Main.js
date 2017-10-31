@@ -13,8 +13,6 @@ import AccountPage from './pages/AccountPageComponent.js';
 import Dashboard from './pages/DashboardComponent.js';
 import CreateEnterprisePage from './pages/CreateEnterprisePageComponent.js';
 
-import 'whatwg-fetch';
-
 class AppComponent extends React.Component {
   render() {
     return (

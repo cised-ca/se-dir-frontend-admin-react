@@ -3,7 +3,7 @@
 import React from 'react';
 import { translate } from 'react-i18next';
 
-import 'whatwg-fetch';
+import api from './api/api.js';
 
 require('styles/UploadLogo.scss');
 
@@ -22,42 +22,27 @@ class UploadLogoComponent extends React.Component {
 
   componentDidMount() {
     const enterpriseId = this.state.enterpriseId;
-    const endpoint = this.context.config.api_root + '/enterprise/' +
-      enterpriseId + '/logo';
+    const apiRoot = this.context.config.api_root;
 
-    fetch(endpoint, {credentials: 'same-origin'})
-      .then((response) => {
-        if (response.ok) {
-          response.blob()
-            .then((blob) => {
-              this.setState({
-                'logo': URL.createObjectURL(blob),
-                'mimetype': blob.type,
-                'updateMethod': 'PUT'
-              });
-            });
-        }
+    api.getEnterpriseLogo(apiRoot, enterpriseId)
+      .then(blob => {
+        this.setState({
+          'logo': URL.createObjectURL(blob),
+          'mimetype': blob.type,
+          'updateMethod': 'PUT'
+        });
       })
-      .catch((error) => {
+      .catch(error => {
         // TODO: Display error
       });
   }
 
   handleDeleteLogo() {
     const enterpriseId = this.state.enterpriseId;
-    const endpoint = this.context.config.api_root + '/enterprise/' +
-      enterpriseId + '/logo';
+    const apiRoot = this.context.config.api_root;
 
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-    const request = new Request(endpoint, {
-      method: 'DELETE',
-      headers: headers
-    });
-
-    fetch(request, {credentials: 'same-origin'})
-      .then((response) => {
+    api.deleteEnterpriseLogo(apiRoot, enterpriseId)
+      .then(() => {
         // TODO: Display success
 
         this.setState({
@@ -66,7 +51,7 @@ class UploadLogoComponent extends React.Component {
           'updateMethod': 'POST'
         });
       })
-      .catch((error) => {
+      .catch(error => {
         // TODO: Display error
       });
   }
@@ -116,8 +101,7 @@ class UploadLogoComponent extends React.Component {
     const updateMethod = this.state.updateMethod || 'POST';
     const logoBase64URL = this.state.logo;
     const mimetype = this.state.mimetype;
-    const endpoint = this.context.config.api_root + '/enterprise/' +
-      enterpriseId + '/logo';
+    const apiRoot = this.context.config.api_root;
 
     const logoBase64 = logoBase64URL.replace( 'data:' + mimetype + ';base64,', '');
 
@@ -126,20 +110,11 @@ class UploadLogoComponent extends React.Component {
       'logo': logoBase64
     };
 
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-    const request = new Request(endpoint, {
-      method: updateMethod,
-      body: JSON.stringify(enterpriseLogo),
-      headers: headers
-    });
-
-    fetch(request, {credentials: 'same-origin'})
-      .then((response) => {
+    api.updateEnterpriseLogo(apiRoot, enterpriseId, enterpriseLogo, updateMethod)
+      .then(response => {
         // TODO: Display success
       })
-      .catch((error) => {
+      .catch(error => {
         // TODO: Display error
       });
   }
