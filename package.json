@@ -70,6 +70,7 @@
   "dependencies": {
     "airbrake-js": "^0.5.9",
     "core-js": "^2.0.0",
+    "es6-promise": "^4.0.5",
     "i18next": "^8.4.3",
     "i18next-xhr-backend": "^1.4.3",
     "node-sass": "^4.5.3",
