@@ -8,6 +8,9 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.scss';
 
 import EnterpriseFormFields from '../EnterpriseFormFieldsComponent';
+import ModalError from '../ModalErrorComponent';
+
+import api from '../api/api.js';
 
 require('styles/pages/CreateEnterprisePage.scss');
 
@@ -16,6 +19,7 @@ class CreateEnterprisePageComponent extends React.Component {
   constructor(props, context) {
     super(props);
 
+    this.clearModalError = this.clearModalError.bind(this);
     this.handleSubmitForm = this.handleSubmitForm.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
@@ -38,6 +42,12 @@ class CreateEnterprisePageComponent extends React.Component {
     }
   }
 
+  clearModalError() {
+      this.setState({
+        error: null
+    });
+  }
+
   handleCancel() {
     browserHistory.push('/admin/dashboard');
   }
@@ -52,8 +62,7 @@ class CreateEnterprisePageComponent extends React.Component {
   handleSubmitForm(event) {
     event.preventDefault();
 
-    const endpoint = this.context.config.api_root + '/enterprise';
-
+    const apiRoot = this.context.config.api_root;
     const enterprise = this.state.enterprise;
     let updatedEnterprise = {};
 
@@ -65,21 +74,20 @@ class CreateEnterprisePageComponent extends React.Component {
     // TODO: locations
     // updatedEnterprise.locations = enterprise.locations || [];
 
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-    const request = new Request(endpoint, {
-      method: 'POST',
-      body: JSON.stringify(updatedEnterprise),
-      headers: headers
-    });
-
-    fetch(request, {credentials: 'same-origin'})
-      .then((response) => {
-        // TODO: Display success
+    api.createEnterprise(apiRoot, updatedEnterprise)
+      .then(() => {
+        browserHistory.push('/admin/dashboard');
       })
-      .catch((error) => {
-        // TODO: Display error
+      .catch(error => {
+          const errorModal = (
+            <ModalError clearError={this.clearModalError}>
+              {error.message}
+            </ModalError>
+          );
+
+          this.setState({
+            error: errorModal
+          });
       });
   }
 
@@ -118,11 +126,14 @@ class CreateEnterprisePageComponent extends React.Component {
   render() {
     const tabs = this.fillTabList();
     const panels = this.fillTabPanels();
+    const error = this.state.error;
 
     const { t } = this.props;
 
     return (
       <div className="createenterprisepage-component create-enterprise-page">
+        {error}
+
         <form onSubmit={this.handleSubmitForm}>
           <Tabs>
             <TabList>

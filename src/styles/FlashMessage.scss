@@ -1,0 +1,21 @@
+.flashmessage-component {
+  border-style: solid;
+  border-width: 1px;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.flashmessage--info {
+  background: #fcfcfc;
+  border-color: #aab8c6;
+}
+
+.flashmessage--error {
+    background: #fff8f7;
+    border-color: #d04437;
+}
+
+.flashmessage--success {
+    background: #f3f9f4;
+    border-color: #91c89c;
+}

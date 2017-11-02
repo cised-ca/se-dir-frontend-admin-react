@@ -3,6 +3,8 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 
+import api from '../api/api.js';
+
 require('styles/panels/EnterpriseListPanel.scss');
 
 class EnterpriseListPanelComponent extends React.Component {
@@ -19,41 +21,18 @@ class EnterpriseListPanelComponent extends React.Component {
     const apiRoot = this.context.config.api_root;
     const status = this.state.status;
 
-    let statusEndpoint;
-
-    switch(status) {
-      case 'pending':
-        statusEndpoint = '/pending';
-        break;
-      case 'published':
-        statusEndpoint = '/complete';
-        break;
-      case 'unpublished':
-        statusEndpoint = '/unpublished';
-        break;
-      default:
-        this.context.logger.notify('Unknown enterprise status: ' + status);
-        statusEndpoint = '/complete';
-    }
-
-    fetch(apiRoot + '/enterprise/' + enterpriseId + statusEndpoint, {credentials: 'include'})
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        if (response.status == 403) {
+    api.getEnterpriseDetails(apiRoot, enterpriseId, status)
+      .then(enterprise => {
+        this.props.handleEnterpriseClick(enterprise);
+      })
+      .catch(error => {
+        if (error.status === 403) {
           browserHistory.push('/login');
+
           return;
         }
 
-        return Promise.reject(new Error('Response status: ' + response.status));
-      })
-      .then((enterprise) => {
-        this.props.handleEnterpriseClick(enterprise);
-      })
-      .catch((error) => {
-        this.context.logger.notify(error);
+        this.context.logger.notify(error.message);
       });
   }
 

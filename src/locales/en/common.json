@@ -1,0 +1,11 @@
+{
+  "enterpriseEditSucess": "Enterprise edited successfully.",
+  "enterpriseEditError": "An error occured while editing the enterprise:",
+  "updateEnterpriseAdminsSuccess": "Administrators updated successfully.",
+  "deleteLogoSuccess": "Logo deleted successfully.",
+  "deleteLogoError": "An error occured while deleting logo:",
+  "noFilesSelected": "No files selected.",
+  "invalidFileType": "Invalid file type.",
+  "updateLogoSuccess": "Logo updated successfully.",
+  "updateLogoError": "An error occured while updating logo:"
+}

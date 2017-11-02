@@ -3,7 +3,10 @@
 import React from 'react';
 import { translate } from 'react-i18next';
 
-import 'whatwg-fetch';
+import FlashMessage from './FlashMessageComponent';
+import ModalError from './ModalErrorComponent';
+
+import api from './api/api.js';
 
 require('styles/UploadLogo.scss');
 
@@ -11,6 +14,7 @@ class UploadLogoComponent extends React.Component {
   constructor(props) {
     super(props);
 
+    this.clearModalError = this.clearModalError.bind(this);
     this.handleUploadLogo = this.handleUploadLogo.bind(this);
     this.handleChangeLogo = this.handleChangeLogo.bind(this);
     this.handleDeleteLogo = this.handleDeleteLogo.bind(this);
@@ -22,52 +26,57 @@ class UploadLogoComponent extends React.Component {
 
   componentDidMount() {
     const enterpriseId = this.state.enterpriseId;
-    const endpoint = this.context.config.api_root + '/enterprise/' +
-      enterpriseId + '/logo';
+    const apiRoot = this.context.config.api_root;
 
-    fetch(endpoint, {credentials: 'same-origin'})
-      .then((response) => {
-        if (response.ok) {
-          response.blob()
-            .then((blob) => {
-              this.setState({
-                'logo': URL.createObjectURL(blob),
-                'mimetype': blob.type,
-                'updateMethod': 'PUT'
-              });
-            });
-        }
+    api.getEnterpriseLogo(apiRoot, enterpriseId)
+      .then(blob => {
+        this.setState({
+          'logo': URL.createObjectURL(blob),
+          'mimetype': blob.type,
+          'updateMethod': 'PUT'
+        });
       })
-      .catch((error) => {
-        // TODO: Display error
+      .catch(error => {
+        this.context.logger.notify('Could not fetch logo: ' + error.message);
       });
   }
 
-  handleDeleteLogo() {
-    const enterpriseId = this.state.enterpriseId;
-    const endpoint = this.context.config.api_root + '/enterprise/' +
-      enterpriseId + '/logo';
-
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-    const request = new Request(endpoint, {
-      method: 'DELETE',
-      headers: headers
+  clearModalError() {
+    this.setState({
+      error: null
     });
+  }
 
-    fetch(request, {credentials: 'same-origin'})
-      .then((response) => {
-        // TODO: Display success
+  handleDeleteLogo() {
+    const { t } = this.props;
+    const enterpriseId = this.state.enterpriseId;
+    const apiRoot = this.context.config.api_root;
+
+    api.deleteEnterpriseLogo(apiRoot, enterpriseId)
+      .then(() => {
+        const flashMessage = (
+          <FlashMessage type="success">
+            {t('common:deleteLogoSuccess')}
+          </FlashMessage>
+        );
 
         this.setState({
           'logo': null,
           'mimetype': null,
-          'updateMethod': 'POST'
+          'updateMethod': 'POST',
+          'flashMessage': flashMessage
         });
       })
-      .catch((error) => {
-        // TODO: Display error
+      .catch(error => {
+        const errorModal = (
+          <ModalError clearError={this.clearModalError}>
+            {t('common:deleteLogoError')} "{error.message}"
+          </ModalError>
+        );
+
+        this.setState({
+          error: errorModal
+        });
       });
   }
 
@@ -79,11 +88,19 @@ class UploadLogoComponent extends React.Component {
       'image/svg+xml'
     ];
 
+    const { t } = this.props;
     const files = event.target.files;
 
     if ( files.length === 0) {
-      // TODO: display error
-      console.log( 'No files selected' );
+      const flashMessage = (
+        <FlashMessage type="error">
+          {t('common:noFilesSelected')}
+        </FlashMessage>
+      );
+
+      this.setState({
+        'flashMessage': flashMessage
+      });
 
       return;
     }
@@ -91,8 +108,15 @@ class UploadLogoComponent extends React.Component {
     const file = files[ 0 ];
 
     if ( !validMimetypes.includes( file.type ) ) {
-      // TODO: display error
-      console.log( 'Invalid file type' );
+      const flashMessage = (
+        <FlashMessage type="error">
+          {t('common:invalidFileType')}
+        </FlashMessage>
+      );
+
+      this.setState({
+        'flashMessage': flashMessage
+      });
 
       return;
     }
@@ -112,12 +136,18 @@ class UploadLogoComponent extends React.Component {
   handleUploadLogo(event) {
     event.preventDefault();
 
+    const { t } = this.props;
     const enterpriseId = this.state.enterpriseId;
     const updateMethod = this.state.updateMethod || 'POST';
     const logoBase64URL = this.state.logo;
     const mimetype = this.state.mimetype;
-    const endpoint = this.context.config.api_root + '/enterprise/' +
-      enterpriseId + '/logo';
+    const apiRoot = this.context.config.api_root;
+
+    if (!logoBase64URL) {
+      this.logoPicker.click();
+
+      return;
+    }
 
     const logoBase64 = logoBase64URL.replace( 'data:' + mimetype + ';base64,', '');
 
@@ -126,33 +156,45 @@ class UploadLogoComponent extends React.Component {
       'logo': logoBase64
     };
 
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+    api.updateEnterpriseLogo(apiRoot, enterpriseId, enterpriseLogo, updateMethod)
+      .then(() => {
+        const flashMessage = (
+          <FlashMessage type="success">
+            {t('common:updateLogoSuccess')}
+          </FlashMessage>
+        );
 
-    const request = new Request(endpoint, {
-      method: updateMethod,
-      body: JSON.stringify(enterpriseLogo),
-      headers: headers
-    });
-
-    fetch(request, {credentials: 'same-origin'})
-      .then((response) => {
-        // TODO: Display success
+        this.setState({
+          flashMessage: flashMessage
+        });
       })
-      .catch((error) => {
-        // TODO: Display error
+      .catch(error => {
+        const errorModal = (
+          <ModalError clearError={this.clearModalError}>
+            {t('common:updateLogoError')} "{error.message}"
+          </ModalError>
+        );
+
+        this.setState({
+          error: errorModal
+        });
       });
   }
 
   render() {
     const logoPreview = this.state.logo || '/admin/images/logo-placeholder.png';
     const { t } = this.props;
+    const flashMessage = this.state.flashMessage;
+    const error = this.state.error;
 
     return (
       <div className="uploadlogo-component">
+        {flashMessage}
+        {error}
+
         <h2>{t('uploadLogo:logo')}</h2>
 
-        <label>
+        <label ref={logoPicker => this.logoPicker = logoPicker}>
           <img className="logo-preview" src={logoPreview} />
 
           <input accept="image/png, image/gif, image/jpeg, image/svg+xml"

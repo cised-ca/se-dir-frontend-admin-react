@@ -5,10 +5,12 @@ import { translate } from 'react-i18next';
 
 import {browserHistory} from 'react-router';
 
+import api from './api/api.js';
+
 require('styles/Logout.scss');
 
 class LogoutComponent extends React.Component {
-  
+
   handleLogout(e) {
     e.preventDefault();
     this.performLogout();
@@ -16,30 +18,21 @@ class LogoutComponent extends React.Component {
 
   performLogout() {
     let apiRoot = this.context.config.api_root;
+
     if (!apiRoot) {
       return;
     }
-    let url  = apiRoot + '/account/logout';
-    let component = this;
 
-    fetch(url, {credentials: 'include'})
-    .then(function(response) {
-      if (response.ok) {
-        component.props.setLoggedIn(false);
+    api.logout(apiRoot)
+      .then(() => {
+        this.props.setLoggedIn(false);
         browserHistory.push('/admin');
-        return;
-      }
-      // TODO: handle the error!
-      /* eslint-disable no-console */
-      console.log('Got response ' + response.status);
-      /* eslint-enable no-console */
-    })
-    .catch(err => {
-      // TODO: handle the error!
-      /* eslint-disable no-console */
-      console.log(err);
-      /* eslint-enable no-console */
-    });
+      })
+      .catch((error) => {
+        this.props.setLoggedIn(false);
+        browserHistory.push('/admin');
+        this.context.logger.notify('Error while logging out: ' + error.message);
+      })
   }
 
   render() {

@@ -12,8 +12,7 @@ import LoginPage from './pages/LoginPageComponent.js';
 import AccountPage from './pages/AccountPageComponent.js';
 import Dashboard from './pages/DashboardComponent.js';
 import CreateEnterprisePage from './pages/CreateEnterprisePageComponent.js';
-
-import 'whatwg-fetch';
+import NotFound from './NotFoundComponent.js';
 
 class AppComponent extends React.Component {
   render() {
@@ -32,6 +31,7 @@ class AppComponent extends React.Component {
           <Route name='account-page' path='account' component={AccountPage} />
           <Route name='create-enterprise-page' path='create' component={CreateEnterprisePage} />
           <Route name='admin-dashboard' path='dashboard' component={Dashboard} />
+          <Route path="*" component={NotFound} />
         </Route>
       </Router>
     );

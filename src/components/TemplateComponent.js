@@ -7,6 +7,8 @@ import TopBar from './TopBarComponent.js';
 
 const airbrakeJs = require('airbrake-js');
 
+require('es6-promise/auto');
+
 require('styles/Template.scss');
 
 class TemplateComponent extends React.Component {

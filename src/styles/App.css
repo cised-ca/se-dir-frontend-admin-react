@@ -2,6 +2,59 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: "Futura PT W01 Bold";
+  src: url("/fonts/88a061c2-3303-401d-85e9-619b5ea5f5af.eot?#iefix");
+  src:
+    url("/fonts/88a061c2-3303-401d-85e9-619b5ea5f5af.eot?#iefix") format("eot"),
+    url("/fonts/1a34942e-33ed-43bb-b229-7460d55b49f7.woff2") format("woff2"),
+    url("/fonts/baecea54-cfd3-4578-8717-abf89eba62b6.woff") format("woff"),
+    url("/fonts/f275eebe-30f5-4068-9294-51dc44c8409e.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Futura PT W01 Book";
+  src: url("/fonts/17abcb18-cb81-4d9c-b55c-5ded2109e506.eot?#iefix");
+  src:
+    url("/fonts/17abcb18-cb81-4d9c-b55c-5ded2109e506.eot?#iefix") format("eot"),
+    url("/fonts/aafdd021-88d4-41d8-8e15-fe91f83e4b17.woff2") format("woff2"),
+    url("/fonts/81d44d4b-ac07-4ad4-8cdd-4df771a3c1c3.woff") format("woff"),
+    url("/fonts/f47c9a36-7884-483a-80d7-57f9ee691407.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Adelle CYR W05 Italic";
+  src: url("/fonts/3d1a74e5-32d3-4f00-a1a5-9606ee4ac7cf.eot?#iefix");
+  src:
+    url("/fonts/3d1a74e5-32d3-4f00-a1a5-9606ee4ac7cf.eot?#iefix") format("eot"),
+    url("/fonts/8bf29738-96e8-45c8-9d31-f0bebf56bb34.woff2") format("woff2"),
+    url("/fonts/65e0d96f-c007-410e-98d7-c72a88a1ab6b.woff") format("woff"),
+    url("/fonts/8009ab49-810e-47a8-a467-af7ebb66f4f1.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Adelle CYR W05 Regular";
+  src: url("/fonts/9b607342-9058-4041-b201-81fd91d809d7.eot?#iefix");
+  src:
+    url("/fonts/9b607342-9058-4041-b201-81fd91d809d7.eot?#iefix") format("eot"),
+    url("/fonts/728f1b95-d263-4e9b-9707-2bad9aeb5231.woff2") format("woff2"),
+    url("/fonts/d69df3c3-0d18-434e-97cf-9ab41f6ec080.woff") format("woff"),
+    url("/fonts/af6cebff-a0b4-466f-aeb3-8a7535d7ac0a.ttf") format("truetype");
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Futura PT W01 Bold";
+}
+
+body {
+  font-family: "Adelle CYR W05 Regular";
+}
+
 html,
 body,
 .app {

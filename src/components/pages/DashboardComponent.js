@@ -6,6 +6,8 @@ import { browserHistory } from 'react-router';
 import PanelList from '../panels/PanelListComponent';
 import Loading from '../LoadingComponent';
 
+import api from '../api/api.js';
+
 require('styles/pages/Dashboard.scss');
 
 class DashboardComponent extends React.Component {
@@ -28,29 +30,19 @@ class DashboardComponent extends React.Component {
       return Promise.resolve(null);
     }
 
-    return fetch(apiRoot + '/account/enterpriseSummary', {credentials: 'same-origin'})
-      .then((response) => {
-
-          if (response.ok) {
-            component.props.setLoggedIn(true);
-            return response
-              .json()
-              .then(function(json) {
-                return json;
-              });
-          }
-
-          if (response.status == 403) {
-            // IF we get a 403 error, it means we're not logged in.
-            // Set logged in to false and redirect to login page
-            component.props.setLoggedIn(false);
-            browserHistory.push('/admin');
-            return Promise.resolve(null);
-          }
-
-          this.context.logger.notify('Got response while fetching account/enterpriseSummary: ' + response.status);
+    return api.getEnterpriseSummary(apiRoot)
+      .then(json => {
+        component.props.setLoggedIn(true);
+        return json;
       })
-      .catch((error) => {
+      .catch(error => {
+        if (error.status === 403) {
+          component.props.setLoggedIn(false);
+          browserHistory.push('/admin');
+
+          return Promise.resolve(null);
+        }
+
         this.context.logger.notify(error);
       });
   }
@@ -64,7 +56,6 @@ class DashboardComponent extends React.Component {
         });
       })
       .catch((err) => {
-        // TODO: display error
         this.context.logger.notify('refresh data fail...: ' + err);
       });
   }

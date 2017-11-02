@@ -4,6 +4,8 @@ import React from 'react';
 import { Link, browserHistory } from 'react-router';
 import { translate } from 'react-i18next';
 
+import api from '../api/api.js';
+
 class AccountPageComponent extends React.Component {
 
   constructor() {
@@ -41,37 +43,22 @@ class AccountPageComponent extends React.Component {
     if (!apiRoot) {
       return;
     }
-    let url  = apiRoot + '/account/permissions';
+
     let component = this;
 
-    fetch(url, {credentials: 'include'})
-    .then(function(response) {
-      if (response.ok) {
-        response.json().then(function(json) {
-          component.props.setLoggedIn(true);
-          component.parsePermissions(component, json);
-          return;
-        });
-        return;
-      }
-      if (response.status == 403) {
-        // IF we get a 403 error, it means we're not logged in.
-        // Set logged in to false and redirect to login page
-        component.props.setLoggedIn(false);
-        browserHistory.push('/admin');
-        return;
-      }
-      // TODO: handle the error!
-      /* eslint-disable no-console */
-      console.log('Got response ' + response.status);
-      /* eslint-enable no-console */
-    })
-    .catch(err => {
-      // TODO: handle the error!
-      /* eslint-disable no-console */
-      console.log(err);
-      /* eslint-enable no-console */
-    });
+    api.getPermissions(apiRoot)
+      .then(json => {
+        component.props.setLoggedIn(true);
+        component.parsePermissions(component, json);
+      })
+      .catch(error => {
+        if (error.status === 403) {
+          component.props.setLoggedIn(false);
+          browserHistory.push('/admin');
+        } else {
+          this.context.logger.notify(error.message);
+        }
+      });
   }
 
   parsePermissions(component, permissions) {
