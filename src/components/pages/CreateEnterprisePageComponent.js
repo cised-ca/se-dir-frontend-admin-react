@@ -10,7 +10,7 @@ import 'react-tabs/style/react-tabs.scss';
 import EnterpriseFormFields from '../EnterpriseFormFieldsComponent';
 import ModalError from '../ModalErrorComponent';
 
-import api from '../api/api.js';
+import api from '../../api/api.js';
 
 require('styles/pages/CreateEnterprisePage.scss');
 

@@ -13,7 +13,7 @@ import EnterpriseAdmins from './EnterpriseAdminsComponent';
 import FlashMessage from './FlashMessageComponent';
 import ModalError from './ModalErrorComponent';
 
-import api from './api/api.js';
+import api from '../api/api.js';
 
 Modal.setAppElement('#app');
 

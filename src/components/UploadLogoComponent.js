@@ -6,7 +6,7 @@ import { translate } from 'react-i18next';
 import FlashMessage from './FlashMessageComponent';
 import ModalError from './ModalErrorComponent';
 
-import api from './api/api.js';
+import api from '../api/api.js';
 
 require('styles/UploadLogo.scss');
 

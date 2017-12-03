@@ -4,7 +4,7 @@ import React from 'react';
 import { Link, browserHistory } from 'react-router';
 import { translate } from 'react-i18next';
 
-import api from '../api/api.js';
+import api from '../../api/api.js';
 
 class AccountPageComponent extends React.Component {
 

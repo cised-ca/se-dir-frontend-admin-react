@@ -5,7 +5,7 @@ import { translate } from 'react-i18next';
 
 import {browserHistory} from 'react-router';
 
-import api from './api/api.js';
+import api from '../api/api.js';
 
 require('styles/Logout.scss');
 

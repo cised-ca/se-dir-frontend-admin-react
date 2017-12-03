@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 import PanelList from '../panels/PanelListComponent';
 import Loading from '../LoadingComponent';
 
-import api from '../api/api.js';
+import api from '../../api/api.js';
 
 require('styles/pages/Dashboard.scss');
 
