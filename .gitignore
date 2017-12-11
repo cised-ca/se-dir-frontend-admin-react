@@ -35,3 +35,6 @@ src/config.json
 # Dist
 dist/
 
+# vim
+*.swp
+
