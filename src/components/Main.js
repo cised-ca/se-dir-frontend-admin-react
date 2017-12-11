@@ -31,6 +31,8 @@ class AppComponent extends React.Component {
           <Route name='account-page' path='account' component={AccountPage} />
           <Route name='create-enterprise-page' path='create' component={CreateEnterprisePage} />
           <Route name='admin-dashboard' path='dashboard' component={Dashboard} />
+          <Route name='admin-dashboard' path='dashboard/:status' component={Dashboard} />
+          <Route name='admin-dashboard' path='dashboard/:status/:enterpriseId' component={Dashboard} />
           <Route path="*" component={NotFound} />
         </Route>
       </Router>

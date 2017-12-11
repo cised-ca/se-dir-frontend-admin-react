@@ -70,6 +70,30 @@ class DashboardComponent extends React.Component {
       });
   }
 
+  // Handle URL changes
+  componentWillReceiveProps(nextProps) {
+    const nextParams = nextProps.params;
+
+    // No parameters (empty object), bail.
+    if (Object.keys(nextParams).length === 0) {
+      return;
+    }
+
+    const state = this.state,
+      currentStatus = state.targetStatus,
+      nextStatus = nextParams.status,
+      currentEnterpriseId = state.targetEnterpriseId,
+      nextEnterpriseId = nextParams.entepriseId,
+      shouldUpdate = (currentStatus !== nextStatus || currentEnterpriseId !== nextEnterpriseId);
+
+    if (shouldUpdate) {
+      this.setState({
+        targetStatus: nextStatus,
+        targetEnterpriseId: nextEnterpriseId
+      });
+    }
+  }
+
   componentDidUpdate(prevProps, prevState, prevContext) {
     if (prevContext.config.api_root !== this.context.config.api_root) {
       this.getEnterpriseStatuses()
@@ -88,7 +112,10 @@ class DashboardComponent extends React.Component {
 
     return (
       <div className="dashboard-component">
-        <PanelList activePanel={this.state.activePanel}
+        <PanelList
+          activePanel={this.state.activePanel}
+          status={this.state.targetStatus}
+          enterpriseId={this.state.targetEnterpriseId}
           enterpriseStatuses={this.state.enterpriseStatuses}
           refreshData={this.refreshData} />
       </div>
