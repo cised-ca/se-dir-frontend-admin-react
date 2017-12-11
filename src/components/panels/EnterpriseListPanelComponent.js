@@ -1,9 +1,8 @@
 'use strict';
 
 import React from 'react';
-import { browserHistory } from 'react-router';
 
-import api from '../../api/api.js';
+import Loading from '../LoadingComponent';
 
 require('styles/panels/EnterpriseListPanel.scss');
 
@@ -17,23 +16,8 @@ class EnterpriseListPanelComponent extends React.Component {
     };
   }
 
-  getEnterpriseDetails(enterpriseId) {
-    const apiRoot = this.context.config.api_root;
-    const status = this.state.status;
-
-    api.getEnterpriseDetails(apiRoot, enterpriseId, status)
-      .then(enterprise => {
-        this.props.handleEnterpriseClick(enterprise);
-      })
-      .catch(error => {
-        if (error.status === 403) {
-          browserHistory.push('/login');
-
-          return;
-        }
-
-        this.context.logger.notify(error.message);
-      });
+  enterpriseClick(enterpriseId) {
+    this.props.handleEnterpriseClick(enterpriseId);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -52,9 +36,13 @@ class EnterpriseListPanelComponent extends React.Component {
     let jsx = [];
     const enterprises = this.state.enterprises;
 
+    if (!enterprises) {
+      return (<Loading />);
+    }
+
     enterprises.map((enterprise) => {
       jsx.push(
-        <li key={enterprise.id} onClick={this.getEnterpriseDetails.bind(this, enterprise.id)}>
+        <li key={enterprise.id} onClick={this.enterpriseClick.bind(this, enterprise.id)}>
           {enterprise.name}
         </li>
       );
@@ -78,3 +66,4 @@ EnterpriseListPanelComponent.contextTypes = {
 };
 
 export default EnterpriseListPanelComponent;
+

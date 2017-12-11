@@ -2,8 +2,12 @@
 
 import React from 'react';
 import { translate } from 'react-i18next';
+import { browserHistory } from 'react-router';
 
 import EditEnterpriseForm from '../EditEnterpriseFormComponent';
+import Loading from '../LoadingComponent';
+
+import api from '../../api/api.js';
 
 require('styles/panels/EnterpriseDetailsPanel.scss');
 
@@ -13,15 +17,43 @@ class EnterpriseDetailsPanelComponent extends React.Component {
 
     this.state = {
       enterprise: props.enterprise,
+      enterpriseId: props.enterpriseId,
       enterpriseStatus: props.enterpriseStatus
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.enterprise.id !== this.props.enterprise.id) {
-      this.setState({
-        enterprise: nextProps.enterprise
+  getEnterpriseDetails(enterpriseId) {
+    const apiRoot = this.context.config.api_root;
+    const status = this.state.enterpriseStatus;
+
+    api.getEnterpriseDetails(apiRoot, enterpriseId, status)
+      .then(enterprise => {
+        this.setState({
+          enterprise: enterprise
+        });
+      })
+      .catch(error => {
+        if (error.status === 403) {
+          browserHistory.push('/login');
+
+          return;
+        }
+
+        this.context.logger.notify(error.message);
       });
+  }
+
+  componentWillMount() {
+    const enterpriseId = this.props.enterpriseId;
+
+    if (enterpriseId) {
+      this.getEnterpriseDetails(this.props.enterpriseId);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.enterpriseId !== this.state.enterpriseId) {
+      this.getEnterpriseDetails(nextProps.enterpriseId);
     }
   }
 
@@ -29,10 +61,20 @@ class EnterpriseDetailsPanelComponent extends React.Component {
     const enterprise = this.state.enterprise;
     const status = this.state.enterpriseStatus;
 
+    let jsx = [];
+
+    if (!this.state.enterprise) {
+      jsx.push(<Loading key="loading" />);
+    } else {
+      jsx.push(
+        <EditEnterpriseForm key="enterprise-details" enterprise={enterprise} enterpriseStatus={status}
+          refreshData={this.props.refreshData} />
+      );
+    }
+
     return (
       <div className="panel panel--wide enterprisedetailspanel-component">
-        <EditEnterpriseForm enterprise={enterprise} enterpriseStatus={status}
-          setActivePanel={this.props.setActivePanel} refreshData={this.props.refreshData} />
+        {jsx}
       </div>
     );
   }

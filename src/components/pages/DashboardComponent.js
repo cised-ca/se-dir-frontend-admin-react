@@ -15,7 +15,6 @@ class DashboardComponent extends React.Component {
     super(props);
 
     this.state = {
-      activePanel: 1,
       enterpriseStatuses: null
     };
 
@@ -83,7 +82,7 @@ class DashboardComponent extends React.Component {
       currentStatus = state.targetStatus,
       nextStatus = nextParams.status,
       currentEnterpriseId = state.targetEnterpriseId,
-      nextEnterpriseId = nextParams.entepriseId,
+      nextEnterpriseId = nextParams.enterpriseId,
       shouldUpdate = (currentStatus !== nextStatus || currentEnterpriseId !== nextEnterpriseId);
 
     if (shouldUpdate) {
@@ -113,7 +112,6 @@ class DashboardComponent extends React.Component {
     return (
       <div className="dashboard-component">
         <PanelList
-          activePanel={this.state.activePanel}
           status={this.state.targetStatus}
           enterpriseId={this.state.targetEnterpriseId}
           enterpriseStatuses={this.state.enterpriseStatuses}
