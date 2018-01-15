@@ -27,7 +27,8 @@ class EditEnterpriseFormComponent extends React.Component {
       error: null,
       enterprise: props.enterprise,
       enterpriseStatus: props.enterpriseStatus,
-      modalIsOpen: false
+      modalIsOpen: false,
+      selectedTab: 0
     }
 
     this.closeModal = this.closeModal.bind(this);
@@ -42,7 +43,8 @@ class EditEnterpriseFormComponent extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.enterprise.id !== this.props.enterprise.id) {
       this.setState({
-        enterprise: nextProps.enterprise
+        enterprise: nextProps.enterprise,
+        selectedTab: 0
       });
     }
   }
@@ -241,7 +243,7 @@ class EditEnterpriseFormComponent extends React.Component {
         </Modal>
 
         <form onSubmit={this.handleSubmitForm}>
-          <Tabs onSelect={this.handleTabSelect}>
+          <Tabs selectedIndex={this.state.selectedTab} onSelect={this.handleTabSelect}>
             <TabList>
               {tabs}
               <Tab>{t('editEnterpriseForm:settings')}</Tab>
