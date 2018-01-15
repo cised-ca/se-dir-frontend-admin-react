@@ -44,6 +44,7 @@ class EditEnterpriseFormComponent extends React.Component {
     if (nextProps.enterprise.id !== this.props.enterprise.id) {
       this.setState({
         enterprise: nextProps.enterprise,
+        flashMessage: null,
         selectedTab: 0
       });
     }
