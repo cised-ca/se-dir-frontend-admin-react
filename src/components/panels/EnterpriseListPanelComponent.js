@@ -3,6 +3,7 @@
 import React from 'react';
 
 import Loading from '../LoadingComponent';
+import Back from '../BackComponent';
 
 require('styles/panels/EnterpriseListPanel.scss');
 
@@ -50,6 +51,8 @@ class EnterpriseListPanelComponent extends React.Component {
 
     return (
       <div className="panel enterpriselistpanel-component">
+        <Back />
+
         <ul>
           {jsx}
         </ul>

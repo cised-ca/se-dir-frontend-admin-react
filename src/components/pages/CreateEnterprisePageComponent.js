@@ -9,6 +9,7 @@ import 'react-tabs/style/react-tabs.scss';
 
 import EnterpriseFormFields from '../EnterpriseFormFieldsComponent';
 import ModalError from '../ModalErrorComponent';
+import Back from '../BackComponent';
 
 import api from '../../api/api.js';
 
@@ -132,6 +133,8 @@ class CreateEnterprisePageComponent extends React.Component {
 
     return (
       <div className="createenterprisepage-component create-enterprise-page">
+        <Back />
+
         {error}
 
         <form onSubmit={this.handleSubmitForm}>

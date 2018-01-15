@@ -73,8 +73,13 @@ class DashboardComponent extends React.Component {
   componentWillReceiveProps(nextProps) {
     const nextParams = nextProps.params;
 
-    // No parameters (empty object), bail.
+    // No parameters, show default dashboard
     if (Object.keys(nextParams).length === 0) {
+      this.setState({
+        targetStatus: null,
+        targetEnterpriseId: null
+      });
+
       return;
     }
 

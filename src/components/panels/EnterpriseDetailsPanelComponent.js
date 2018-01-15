@@ -6,6 +6,7 @@ import { browserHistory } from 'react-router';
 
 import EditEnterpriseForm from '../EditEnterpriseFormComponent';
 import Loading from '../LoadingComponent';
+import Back from '../BackComponent';
 
 import api from '../../api/api.js';
 
@@ -74,6 +75,8 @@ class EnterpriseDetailsPanelComponent extends React.Component {
 
     return (
       <div className="panel panel--wide enterprisedetailspanel-component">
+        <Back />
+
         {jsx}
       </div>
     );
