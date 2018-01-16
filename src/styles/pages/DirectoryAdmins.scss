@@ -1,0 +1,23 @@
+.directoryadmins-component {
+  label {
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  textarea {
+    display: block;
+    margin-top: 20px;
+    min-height: 100px;
+    min-width: 375px;
+  }
+}
+
+// Show 'back' link on that page
+@media only screen and (min-width: 768px) {
+  .directoryadmins-component {
+    .back-component {
+      display: block;
+    }
+  }
+}
+

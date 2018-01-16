@@ -1,5 +1,6 @@
 {
-  "adminDashboard": "Tableau de bord administratif",
   "account": "Compte",
-  "createEnterprise": "Créer une entreprise"
+  "adminDashboard": "Tableau de bord administratif",
+  "createEnterprise": "Créer une entreprise",
+  "directoryAdmins": "Administrateurs"
 }

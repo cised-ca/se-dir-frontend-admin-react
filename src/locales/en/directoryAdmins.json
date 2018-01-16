@@ -1,0 +1,7 @@
+{
+  "admins": "Email addresses of directory admins (one per line)",
+  "updateDirectoryAdminsSuccess": "Directory admins updated successfully",
+  "save": "Save",
+  "cancel": "Cancel"
+}
+
