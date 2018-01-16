@@ -11,39 +11,16 @@ class AccountPageComponent extends React.Component {
   constructor() {
     super();
     this.state = {
-      loaded: false,
       directoryAdmin: false,
       authenticatedEnterprises: []
     };
   }
 
   componentDidMount() {
-    this.setState({loaded: false});
     this.getPermissions(this.context.config.api_root);
   }
 
-  /**
-   * Called before receiving new props
-   */
-  componentWillReceiveProps(nextProps, nextContext) {
-    let currentApiRoot = this.context.config.api_root,
-      newApiRoot = nextContext.config.api_root,
-      doQuery;
-
-    doQuery = (currentApiRoot !== newApiRoot);
-
-    // If the api root is different than the previous
-    // time we received props/context, trigger a new fetch
-    if (doQuery) {
-      this.getPermissions(newApiRoot);
-    }
-  }
-
   getPermissions(apiRoot) {
-    if (!apiRoot) {
-      return;
-    }
-
     let component = this;
 
     api.getPermissions(apiRoot)

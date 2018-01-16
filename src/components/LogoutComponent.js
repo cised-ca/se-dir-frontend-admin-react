@@ -19,10 +19,6 @@ class LogoutComponent extends React.Component {
   performLogout() {
     let apiRoot = this.context.config.api_root;
 
-    if (!apiRoot) {
-      return;
-    }
-
     api.logout(apiRoot)
       .then(() => {
         this.props.setLoggedIn(false);
@@ -53,8 +49,5 @@ LogoutComponent.contextTypes = {
   'logger': React.PropTypes.object
 };
 
-// Uncomment properties you need
-// LogoutComponent.propTypes = {};
-// LogoutComponent.defaultProps = {};
-
 export default translate('logout')(LogoutComponent);
+

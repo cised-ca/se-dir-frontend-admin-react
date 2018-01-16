@@ -25,10 +25,6 @@ class DashboardComponent extends React.Component {
     const apiRoot = this.context.config.api_root;
     let component = this;
 
-    if (!apiRoot) {
-      return Promise.resolve(null);
-    }
-
     return api.getEnterpriseSummary(apiRoot)
       .then(json => {
         component.props.setLoggedIn(true);
@@ -98,17 +94,6 @@ class DashboardComponent extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState, prevContext) {
-    if (prevContext.config.api_root !== this.context.config.api_root) {
-      this.getEnterpriseStatuses()
-        .then((enterpriseStatuses) => {
-          this.setState({
-            enterpriseStatuses: enterpriseStatuses
-          });
-        });
-    }
-  }
-
   render() {
     if (!this.state.enterpriseStatuses) {
       return (<Loading />);
@@ -134,3 +119,4 @@ DashboardComponent.contextTypes = {
 };
 
 export default DashboardComponent;
+
