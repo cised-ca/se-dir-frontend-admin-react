@@ -4,10 +4,6 @@ import React from 'react';
 import { translate } from 'react-i18next';
 import { browserHistory } from 'react-router';
 
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.scss';
-
-import EnterpriseFormFields from '../EnterpriseFormFieldsComponent';
 import ModalError from '../ModalErrorComponent';
 import Back from '../BackComponent';
 
@@ -23,7 +19,7 @@ class CreateEnterprisePageComponent extends React.Component {
     this.clearModalError = this.clearModalError.bind(this);
     this.handleSubmitForm = this.handleSubmitForm.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
-    this.handleFormChange = this.handleFormChange.bind(this);
+    this.handleStringInputChange = this.handleStringInputChange.bind(this);
 
     let enterprise = {};
 
@@ -53,11 +49,15 @@ class CreateEnterprisePageComponent extends React.Component {
     browserHistory.push('/admin/dashboard');
   }
 
-  handleFormChange(fieldsState) {
-    let newState = {};
-    newState[fieldsState.locale] = fieldsState.enterprise;
+  handleStringInputChange(event) {
+    const target = event.target;
 
-    this.setState(newState);
+    let currEnterprise = this.state.enterprise;
+    currEnterprise[target.dataset.locale][target.name] = target.value;
+
+    this.setState({
+      enterprise: currEnterprise
+    });
   }
 
   handleSubmitForm(event) {
@@ -72,12 +72,9 @@ class CreateEnterprisePageComponent extends React.Component {
       updatedEnterprise[locale.locale] = enterprise[locale.locale];
     });
 
-    // TODO: locations
-    // updatedEnterprise.locations = enterprise.locations || [];
-
     api.createEnterprise(apiRoot, updatedEnterprise)
-      .then(() => {
-        browserHistory.push('/admin/dashboard');
+      .then((response) => {
+        browserHistory.push('/admin/dashboard/unpublished/' + response.id);
       })
       .catch(error => {
           const errorModal = (
@@ -92,42 +89,9 @@ class CreateEnterprisePageComponent extends React.Component {
       });
   }
 
-  fillTabList() {
-    const locales = this.context.config.locales;
-    const { t } = this.props;
-
-    const tabs = locales.map((locale) => {
-      return (
-        <Tab key={locale.locale}>{t('createEnterprisePage:' + locale.name)}</Tab>
-      );
-    });
-
-    return tabs;
-  }
-
-  fillTabPanels() {
-    const locales = this.context.config.locales;
-
-    const panels = locales.map((locale) => {
-      const enterprise = this.state.enterprise[locale.locale];
-      const enterpriseFormFields = <EnterpriseFormFields enterprise={enterprise} locale={locale.locale} updateParent={this.handleFormChange} />
-
-      return (
-        <TabPanel key={'enterprise-' + locale.locale}>
-          <h1>{enterprise.name}</h1>
-
-          {enterpriseFormFields}
-        </TabPanel>
-      );
-    });
-
-    return panels;
-  }
-
   render() {
-    const tabs = this.fillTabList();
-    const panels = this.fillTabPanels();
     const error = this.state.error;
+    let enterprise = this.state.enterprise;
 
     const { t } = this.props;
 
@@ -138,15 +102,28 @@ class CreateEnterprisePageComponent extends React.Component {
         {error}
 
         <form onSubmit={this.handleSubmitForm}>
-          <Tabs>
-            <TabList>
-              {tabs}
-            </TabList>
 
-            {panels}
-          </Tabs>
+          <label>
+            {t('createEnterprisePage:englishEnterpriseName')}
+            <input
+              name='name'
+              data-locale='en'
+              onChange={this.handleStringInputChange}
+              required
+              value={enterprise.en.name || ''} />
+          </label>
 
-          <input className='button button--primary' type='submit' value={t('createEnterprisePage:save')} />
+          <label>
+            {t('createEnterprisePage:frenchEnterpriseName')}
+            <input
+              name='name'
+              data-locale='fr'
+              onChange={this.handleStringInputChange}
+              required
+              value={enterprise.fr.name || ''} />
+          </label>
+
+          <input className='button button--primary' type='submit' value={t('createEnterprisePage:next')} />
 
           <input className='button button--default' name='cancel'
             onClick={this.handleCancel}

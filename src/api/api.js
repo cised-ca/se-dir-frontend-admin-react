@@ -306,7 +306,7 @@ const api = {
     return fetch(request, {credentials: 'same-origin'})
       .then(response => {
         if (response.ok) {
-          return Promise.resolve();
+          return response.json();
         }
 
         return response.json()

@@ -1,6 +1,7 @@
 {
-  "save": "Sauvegarder",
   "cancel": "Annuler",
-  "english": "Anglais",
-  "french": "Français"
+  "englishEnterpriseName": "Nom de l'entreprise en anglais:",
+  "frenchEnterpriseName": "Nom de l'entreprise en français",
+  "next": "Suivant"
 }
+
