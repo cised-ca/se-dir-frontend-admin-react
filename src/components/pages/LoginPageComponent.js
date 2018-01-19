@@ -31,6 +31,9 @@ class LoginPageComponent extends React.Component {
           <a role="button" className="button button--login" href={apiRoot + '/account/login/facebook'}>
                   <img className="login__icon" src="/admin/images/facebook.png" alt="" />
           </a>
+          <a role="button" className="button button--login" href={apiRoot + '/account/login/google'}>
+                  <img className="login__icon" src="/admin/images/google.png" alt="" />
+          </a>
           <a role="button" className="button button--login" href={apiRoot + '/account/login/twitter'}>
                   <img className="login__icon" src="/admin/images/twitter.png" alt="" />
           </a>
