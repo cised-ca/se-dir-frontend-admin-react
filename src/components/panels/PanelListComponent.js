@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import { browserHistory } from 'react-router';
 
 import StatusPanel from './StatusPanelComponent';
 import EnterpriseListPanel from './EnterpriseListPanelComponent';
@@ -12,27 +13,47 @@ class PanelListComponent extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      activePanel: 1,
-      enterpriseDetails: null
+    let state = {
+      status: null,
+      enterpriseDetails: null,
+      enterpriseStatuses: null,
+      enterprises: null
     };
+
+    if (props.status) {
+      state.status = props.status;
+      state.enterpriseStatuses = props.enterpriseStatuses;
+      state.enterprises = props.enterpriseStatuses[props.status];
+
+      if (props.enterpriseId) {
+        state.enterpriseId = props.enterpriseId;
+      }
+    }
+
+    this.state = state;
 
     this.handleStatusClick = this.handleStatusClick.bind(this);
     this.handleEnterpriseClick = this.handleEnterpriseClick.bind(this);
-    this.setActivePanel = this.setActivePanel.bind(this);
     this.refreshData = this.refreshData.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.state.status) {
-      return;
-    }
-    const nextStatuses = nextProps.enterpriseStatuses;
-    const currStatus = this.state.status.toLowerCase();
-    const nextEnterprises = nextStatuses[currStatus];
+    const state = this.state,
+      currentStatus = state.status,
+      nextStatus = nextProps.status,
+      currentEnterpriseId = state.enterpriseId,
+      nextEnterpriseId = nextProps.enterpriseId,
 
-    if (nextEnterprises.length !== this.state.enterprises.length) {
+      nextStatuses = nextProps.enterpriseStatuses,
+      nextEnterprises = nextStatuses[nextStatus];
+
+    if (currentStatus !== nextStatus
+        || currentEnterpriseId !== nextEnterpriseId) {
+
       this.setState({
+        status: nextStatus,
+        enterpriseId: nextEnterpriseId,
+        enterpriseStatuses: nextStatuses,
         enterprises: nextEnterprises
       });
     }
@@ -42,53 +63,59 @@ class PanelListComponent extends React.Component {
     this.props.refreshData();
   }
 
-  setActivePanel(activePanel) {
-    this.setState({
-      activePanel: activePanel
-    });
-  }
-
   handleStatusClick(enterprises, status) {
-    this.setState({
-      activePanel: 2,
-      enterprises: enterprises,
-      status: status
-    });
+    browserHistory.push('/admin/dashboard/' + status);
   }
 
-  handleEnterpriseClick(enterprise) {
+  handleEnterpriseClick(enterpriseId) {
     this.setState({
-      activePanel: 3,
-      enterpriseDetails: enterprise
+      enterpriseId: enterpriseId
     });
+
+    browserHistory.push('/admin/dashboard/' + this.state.status + '/' + enterpriseId);
   }
 
-  buildPanels(activePanel) {
+  buildPanels() {
     let jsx = [];
+    const state = this.state;
 
+    // The StatusPanel is always visible
     jsx.push(
-      <StatusPanel key="status" enterpriseStatuses={this.props.enterpriseStatuses}
+      <StatusPanel
+        key="status"
+        enterpriseStatuses={this.props.enterpriseStatuses}
         handleStatusClick={this.handleStatusClick} />
     );
 
-    if (activePanel >= 2) {
-      jsx.push(<EnterpriseListPanel key="enterprise-list" enterprises={this.state.enterprises}
-        status={this.state.status} handleEnterpriseClick={this.handleEnterpriseClick} />);
+    // The EnterpriseListPanel is only visible if we know which
+    // status to display
+    if (state.status) {
+      jsx.push(
+        <EnterpriseListPanel
+          key="enterprise-list"
+          status={state.status}
+          enterprises={state.enterprises}
+          handleEnterpriseClick={this.handleEnterpriseClick} />
+      );
     }
 
-    if (activePanel >= 3) {
-      jsx.push(<EnterpriseDetailsPanel key="enterprise-details"
-        setActivePanel={this.setActivePanel}
-        enterpriseStatus={this.state.status}
-        enterprise={this.state.enterpriseDetails}
-        refreshData={this.refreshData} />);
+    // The EntepriseDetailsPanel is only visible if we know which
+    // enterprise to display
+    if (state.enterpriseId) {
+      jsx.push(
+        <EnterpriseDetailsPanel key="enterprise-details"
+          enterpriseStatus={state.status}
+          enterpriseId={state.enterpriseId}
+          enterprise={state.enterpriseDetails}
+          refreshData={this.refreshData} />
+      );
     }
 
     return jsx;
   }
 
   render() {
-    let jsx = this.buildPanels(this.state.activePanel);
+    let jsx = this.buildPanels();
 
     return (
       <div className="panellist-component">
@@ -101,3 +128,4 @@ class PanelListComponent extends React.Component {
 PanelListComponent.displayName = 'PanelsPanelListComponent';
 
 export default PanelListComponent;
+

@@ -1,0 +1,26 @@
+/* 'Back' link with left arrow icon */
+
+.back-component {
+	margin: 12px 0;
+}
+
+.back {
+	$primary-color: #ff5c3e;
+	$primary-color-dark: #de5138;
+
+  background: url("/images/arrow-left.png") no-repeat center left;
+  color: $primary-color;
+  cursor: pointer;
+  padding-left: 30px;
+
+	&:hover {
+		color: $primary-color-dark;
+	}
+}
+
+@media only screen and (min-width: 768px) {
+	.back-component {
+		display: none;
+	}
+}
+

@@ -3,6 +3,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 import { translate } from 'react-i18next';
+import { browserHistory } from 'react-router';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.scss';
@@ -13,7 +14,7 @@ import EnterpriseAdmins from './EnterpriseAdminsComponent';
 import FlashMessage from './FlashMessageComponent';
 import ModalError from './ModalErrorComponent';
 
-import api from './api/api.js';
+import api from '../api/api.js';
 
 Modal.setAppElement('#app');
 
@@ -27,7 +28,8 @@ class EditEnterpriseFormComponent extends React.Component {
       error: null,
       enterprise: props.enterprise,
       enterpriseStatus: props.enterpriseStatus,
-      modalIsOpen: false
+      modalIsOpen: false,
+      selectedTab: 0
     }
 
     this.closeModal = this.closeModal.bind(this);
@@ -42,7 +44,9 @@ class EditEnterpriseFormComponent extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.enterprise.id !== this.props.enterprise.id) {
       this.setState({
-        enterprise: nextProps.enterprise
+        enterprise: nextProps.enterprise,
+        flashMessage: null,
+        selectedTab: 0
       });
     }
   }
@@ -147,8 +151,8 @@ class EditEnterpriseFormComponent extends React.Component {
 
     api.deleteEnterprise(apiRoot, enterprise.id, enterpriseStatus)
       .then(() => {
-        this.props.setActivePanel(2);
         this.props.refreshData();
+        browserHistory.push('/admin');
       })
       .catch(error => {
           const errorModal = (
@@ -241,7 +245,7 @@ class EditEnterpriseFormComponent extends React.Component {
         </Modal>
 
         <form onSubmit={this.handleSubmitForm}>
-          <Tabs onSelect={this.handleTabSelect}>
+          <Tabs selectedIndex={this.state.selectedTab} onSelect={this.handleTabSelect}>
             <TabList>
               {tabs}
               <Tab>{t('editEnterpriseForm:settings')}</Tab>

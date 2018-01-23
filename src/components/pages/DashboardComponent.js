@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 import PanelList from '../panels/PanelListComponent';
 import Loading from '../LoadingComponent';
 
-import api from '../api/api.js';
+import api from '../../api/api.js';
 
 require('styles/pages/Dashboard.scss');
 
@@ -15,7 +15,6 @@ class DashboardComponent extends React.Component {
     super(props);
 
     this.state = {
-      activePanel: 1,
       enterpriseStatuses: null
     };
 
@@ -25,10 +24,6 @@ class DashboardComponent extends React.Component {
   getEnterpriseStatuses() {
     const apiRoot = this.context.config.api_root;
     let component = this;
-
-    if (!apiRoot) {
-      return Promise.resolve(null);
-    }
 
     return api.getEnterpriseSummary(apiRoot)
       .then(json => {
@@ -70,14 +65,32 @@ class DashboardComponent extends React.Component {
       });
   }
 
-  componentDidUpdate(prevProps, prevState, prevContext) {
-    if (prevContext.config.api_root !== this.context.config.api_root) {
-      this.getEnterpriseStatuses()
-        .then((enterpriseStatuses) => {
-          this.setState({
-            enterpriseStatuses: enterpriseStatuses
-          });
-        });
+  // Handle URL changes
+  componentWillReceiveProps(nextProps) {
+    const nextParams = nextProps.params;
+
+    // No parameters, show default dashboard
+    if (Object.keys(nextParams).length === 0) {
+      this.setState({
+        targetStatus: null,
+        targetEnterpriseId: null
+      });
+
+      return;
+    }
+
+    const state = this.state,
+      currentStatus = state.targetStatus,
+      nextStatus = nextParams.status,
+      currentEnterpriseId = state.targetEnterpriseId,
+      nextEnterpriseId = nextParams.enterpriseId,
+      shouldUpdate = (currentStatus !== nextStatus || currentEnterpriseId !== nextEnterpriseId);
+
+    if (shouldUpdate) {
+      this.setState({
+        targetStatus: nextStatus,
+        targetEnterpriseId: nextEnterpriseId
+      });
     }
   }
 
@@ -88,7 +101,9 @@ class DashboardComponent extends React.Component {
 
     return (
       <div className="dashboard-component">
-        <PanelList activePanel={this.state.activePanel}
+        <PanelList
+          status={this.state.targetStatus}
+          enterpriseId={this.state.targetEnterpriseId}
           enterpriseStatuses={this.state.enterpriseStatuses}
           refreshData={this.refreshData} />
       </div>
@@ -104,3 +119,4 @@ DashboardComponent.contextTypes = {
 };
 
 export default DashboardComponent;
+

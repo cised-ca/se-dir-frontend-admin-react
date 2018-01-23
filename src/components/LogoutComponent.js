@@ -5,7 +5,7 @@ import { translate } from 'react-i18next';
 
 import {browserHistory} from 'react-router';
 
-import api from './api/api.js';
+import api from '../api/api.js';
 
 require('styles/Logout.scss');
 
@@ -18,10 +18,6 @@ class LogoutComponent extends React.Component {
 
   performLogout() {
     let apiRoot = this.context.config.api_root;
-
-    if (!apiRoot) {
-      return;
-    }
 
     api.logout(apiRoot)
       .then(() => {
@@ -53,8 +49,5 @@ LogoutComponent.contextTypes = {
   'logger': React.PropTypes.object
 };
 
-// Uncomment properties you need
-// LogoutComponent.propTypes = {};
-// LogoutComponent.defaultProps = {};
-
 export default translate('logout')(LogoutComponent);
+

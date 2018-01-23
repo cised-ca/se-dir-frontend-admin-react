@@ -1,6 +1,6 @@
 {
-  "save": "Save",
   "cancel": "Cancel",
-  "english": "English",
-  "french": "French"
+  "englishEnterpriseName": "English enterprise name:",
+  "frenchEnterpriseName": "French enterprise name",
+  "next": "Next"
 }

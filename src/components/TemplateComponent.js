@@ -3,7 +3,8 @@
 import React from 'react';
 import i18n from '../i18n';
 
-import TopBar from './TopBarComponent.js';
+import TopBar from './TopBarComponent';
+import Loading from './LoadingComponent';
 
 const airbrakeJs = require('airbrake-js');
 
@@ -27,7 +28,7 @@ class TemplateComponent extends React.Component {
     super(props);
 
     this.state = {
-      config: {},
+      config: null,
       isLoggedIn: false,
       setLoggedIn: this.setLoggedIn.bind(this),
       logger: {
@@ -119,17 +120,25 @@ class TemplateComponent extends React.Component {
   }
 
   render() {
-    let childWithProps = React.cloneElement(this.props.children, this.state);
+    let jsx;
 
-    return (
-      <div className="template-component template">
-        <TopBar isLoggedIn={this.state.isLoggedIn} setLoggedIn={this.state.setLoggedIn} />
+    if (this.state.config === null) {
+      jsx = (<Loading />);
+    } else {
+      let childWithProps = React.cloneElement(this.props.children, this.state);
 
-        <main className="template__main">
-          {childWithProps}
-        </main>
-      </div>
-    );
+      jsx = (
+        <div className="template-component template">
+          <TopBar isLoggedIn={this.state.isLoggedIn} setLoggedIn={this.state.setLoggedIn} />
+
+          <main className="template__main">
+            {childWithProps}
+          </main>
+        </div>
+      );
+    }
+
+    return jsx;
   }
 }
 
@@ -141,3 +150,4 @@ TemplateComponent.childContextTypes = {
 };
 
 export default TemplateComponent;
+

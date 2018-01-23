@@ -43,6 +43,59 @@ const api = {
       });
   },
 
+  getDirectoryAdministrators: function(apiRoot) {
+    const url = apiRoot + '/directoryAdmin';
+
+    return fetch(url, {credentials: 'same-origin'})
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        return Promise.reject({
+          status: response.status,
+          message: response.statusText
+        });
+      })
+      .catch(error => {
+        return Promise.reject({
+          status: undefined,
+          message: 'Unable to get directory admins: ' + error.message
+        });
+      });
+  },
+
+  updateDirectoryAdministrators: function(apiRoot, admins) {
+    const url = apiRoot + '/directoryAdmin';
+
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    const request = new Request(url, {
+      method: 'PUT',
+      body: JSON.stringify(admins),
+      headers: headers
+    });
+
+    return fetch(request, {credentials: 'same-origin'})
+      .then(response => {
+        if (response.ok) {
+          return Promise.resolve();
+        }
+
+        return Promise.reject({
+          status: response.status,
+          message: response.statusText
+        });
+      })
+      .catch(error => {
+        return Promise.reject({
+          status: undefined,
+          message: 'Unable to update directory admins: ' + error.message
+        });
+      });
+  },
+
   getEnterpriseAdministrators: function(apiRoot, enterpriseId) {
     const url = apiRoot + '/enterprise/' + enterpriseId + '/admin';
 
@@ -253,7 +306,7 @@ const api = {
     return fetch(request, {credentials: 'same-origin'})
       .then(response => {
         if (response.ok) {
-          return Promise.resolve();
+          return response.json();
         }
 
         return response.json()

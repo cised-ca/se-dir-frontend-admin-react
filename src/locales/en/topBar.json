@@ -1,5 +1,7 @@
 {
-  "adminDashboard": "Admin Dashboard",
   "account": "Account",
-  "createEnterprise": "Create enterprise"
+  "adminDashboard": "Admin Dashboard",
+  "createEnterprise": "Create enterprise",
+  "directoryAdmins": "Directory admins"
 }
+

@@ -9,6 +9,7 @@ class EnterpriseFormFieldsComponent extends React.Component {
   constructor(props) {
     super(props);
 
+    this.handleArrayInputChange = this.handleArrayInputChange.bind(this);
     this.handleStringInputChange = this.handleStringInputChange.bind(this);
     this.handleNumberInputChange = this.handleNumberInputChange.bind(this);
 
@@ -64,6 +65,27 @@ class EnterpriseFormFieldsComponent extends React.Component {
     this.updateParent();
   }
 
+  handleArrayInputChange(event) {
+    const target = event.target;
+
+    let value = target.value;
+
+    if (value) {
+      value = value.split(',');
+    } else {
+      value = [];
+    }
+
+    let currEnterprise = this.state.enterprise;
+    currEnterprise[target.name] = value;
+
+    this.setState({
+      enterprise: currEnterprise
+    });
+
+    this.updateParent();
+  }
+
   updateParent() {
     this.props.updateParent({
       enterprise: this.state.enterprise,
@@ -108,6 +130,14 @@ class EnterpriseFormFieldsComponent extends React.Component {
             name='year_started'
             onChange={this.handleNumberInputChange}
             value={enterprise.year_started || ''} />
+        </label>
+
+        <label>
+          {t('enterpriseFormFields:purpose')}
+          <input
+            name='purposes'
+            onChange={this.handleArrayInputChange}
+            value={enterprise.purposes || ''} />
         </label>
 
         <label>
