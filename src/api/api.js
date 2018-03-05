@@ -325,8 +325,12 @@ const api = {
       });
   },
 
-  editEnterprise: function(apiRoot, enterpriseId, enterprise) {
-    const url = apiRoot + '/enterprise/' + enterpriseId;
+  editEnterprise: function(apiRoot, enterpriseId, enterpriseStatus, enterprise) {
+    let url = apiRoot + '/enterprise/' + enterpriseId;
+
+    if ( enterpriseStatus ) {
+      url += '/' + enterpriseStatus;
+    }
 
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');

@@ -12,6 +12,7 @@ class EnterpriseFormFieldsComponent extends React.Component {
     this.handleArrayInputChange = this.handleArrayInputChange.bind(this);
     this.handleStringInputChange = this.handleStringInputChange.bind(this);
     this.handleNumberInputChange = this.handleNumberInputChange.bind(this);
+    this.handleSelectChange = this.handleSelectChange.bind(this);
 
     this.state = {
       enterprise: props.enterprise,
@@ -19,12 +20,30 @@ class EnterpriseFormFieldsComponent extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+	componentWillReceiveProps(nextProps) {
     if (nextProps.enterprise.name !== this.props.enterprise.name) {
       this.setState({
         enterprise: nextProps.enterprise
       });
     }
+  }
+
+  handleSelectChange(event) {
+    const target = event.target,
+      options = target.options;
+
+    let currEnterprise = this.state.enterprise,
+      values;
+
+    values = [...options].filter(option => option.selected).map(option => option.value);
+
+    currEnterprise[target.name] = values;
+
+    this.setState({
+      enterprise: currEnterprise
+    });
+
+    this.updateParent();
   }
 
   handleNumberInputChange(event) {
@@ -56,7 +75,12 @@ class EnterpriseFormFieldsComponent extends React.Component {
     const target = event.target;
 
     let currEnterprise = this.state.enterprise;
+    let maxWords = target.dataset.maxWords;
     currEnterprise[target.name] = target.value;
+
+    if ( maxWords && target.value.split(/\s+/).length > maxWords ) {
+      return;
+    }
 
     this.setState({
       enterprise: currEnterprise
@@ -93,9 +117,30 @@ class EnterpriseFormFieldsComponent extends React.Component {
     });
   }
 
+  buildPurposeOptions() {
+		const { t } = this.props;
+
+		let enterprisePurposes = this.state.enterprise.purposes || [];
+    let purposeOptions = t('enterpriseFormFields:purposeOptions', { returnObjects: true });
+
+    if (!purposeOptions) {
+      return;
+    }
+
+    return (
+      purposeOptions.map(x => {
+        if (enterprisePurposes.includes(x)) {
+          return (<option key={x} selected="selected">{x}</option>);
+        }
+        return (<option key={x}>{x}</option>);
+      })
+    );
+	}
+
   render() {
     const enterprise = this.state.enterprise;
     const { t } = this.props;
+		const purposesOptions = this.buildPurposeOptions();
 
     return (
       <div className='enterpriseformfields-component enterprise-form-fields'>
@@ -109,42 +154,41 @@ class EnterpriseFormFieldsComponent extends React.Component {
         </label>
 
         <label>
-          {t('enterpriseFormFields:shortDescription')}
+          {t('enterpriseFormFields:shortDescription')}<br />
+          ({t('enterpriseFormFields:maxWords', { number: 50 })})
           <input
+            data-max-words='50'
             name='short_description'
             onChange={this.handleStringInputChange}
             value={enterprise.short_description || ''} />
         </label>
 
         <label>
-          {t('enterpriseFormFields:description')}
+          {t('enterpriseFormFields:description')}<br />
+          ({t('enterpriseFormFields:maxWords', { number: 150 })})
           <textarea
+            data-max-words='150'
             name='description'
             onChange={this.handleStringInputChange}
             value={enterprise.description || ''} />
         </label>
 
-        <label>
-          {t('enterpriseFormFields:yearStarted')}
-          <input
-            name='year_started'
-            onChange={this.handleNumberInputChange}
-            value={enterprise.year_started || ''} />
-        </label>
-
-        <label>
+        <label style={{'marginBottom': '0'}}>
           {t('enterpriseFormFields:purpose')}
-          <input
-            name='purposes'
-            onChange={this.handleArrayInputChange}
-            value={enterprise.purposes || ''} />
         </label>
+        <select name='purposes' onChange={this.handleSelectChange} multiple={true}
+          value={enterprise.purposes || ''}>
+            <option value=''></option>
+						{ purposesOptions }
+        </select>
 
         <label>
-          {t('enterpriseFormFields:offering')}
+          {t('enterpriseFormFields:offering')}<br />
+          ({t('enterpriseFormFields:maxWords', { number: 3 })})
           <input
+            data-max-words='3'
             name='offering'
-            onChange={this.handleStringInputChange}
+            onChange={this.handleArrayInputChange}
             value={enterprise.offering || ''} />
         </label>
 

@@ -1,12 +1,24 @@
 {
+
   "enterpriseName": "Enterprise name:",
   "shortDescription": "Short description:",
   "description": "Description:",
   "yearStarted": "Year started:",
   "offering": "Offering:",
   "purpose": "Purpose:",
+  "purposeOptions": [
+    "Social Inclusion",
+    "Food Security & Hunger Alleviation",
+    "Arts & Culture",
+    "Environmental",
+    "Real Estate/Property Maintenance",
+    "Work Skills Training for New Canadians",
+    "Work Skills Training for Hard-to-Employ Individuals",
+    "Generate Income for a Parent Organization"
+  ],
   "website": "Website:",
   "facebookUsername": "Facebook username:",
   "instagramUsername": "Instagram username:",
-  "twitterUsername": "Twitter username:"
+  "twitterUsername": "Twitter username:",
+  "maxWords": "maximum {{ number }} words"
 }

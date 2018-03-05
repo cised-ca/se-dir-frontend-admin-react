@@ -106,6 +106,7 @@ class EditEnterpriseFormComponent extends React.Component {
     event.preventDefault();
 
     const apiRoot = this.context.config.api_root;
+    const enterpriseStatus = this.state.enterpriseStatus;
     const enterprise = this.state.enterprise;
     let updatedEnterprise = {};
 
@@ -119,7 +120,7 @@ class EditEnterpriseFormComponent extends React.Component {
     // TODO
     // updatedEnterprise.locations = enterprise.locations || [];
 
-    api.editEnterprise(apiRoot, enterprise.id, updatedEnterprise)
+    api.editEnterprise(apiRoot, enterprise.id, enterpriseStatus, updatedEnterprise)
       .then(() => {
           const flashMessage = (
             <FlashMessage type="success">

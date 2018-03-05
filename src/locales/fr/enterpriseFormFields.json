@@ -5,8 +5,19 @@
   "yearStarted": "Année de fondation :",
   "offering": "Offres :",
   "purpose": "Objectif:",
+  "purposeOptions": [
+    "lnclusion sociale",
+    "Sécurité alimentaire et la lutte contre la faim",
+    "Arts et Culture",
+    "Environnement",
+    "Immobilier/travaux d’entretien",
+    "Formation professionnelle pour les nouveaux canadiens",
+    "Formation professionnelle pour des individus marginalisés par le marché de l'emploi",
+    "Génèrer des revenus pour l’organisation mère"
+  ],
   "website": "Site web :",
   "facebookUsername": "Nom d'utilisateur Facebook :",
   "instagramUsername": "Nom d'utilisateur Instagram :",
-  "twitterUsername": "Nom d'utilisateur Twitter :"
+  "twitterUsername": "Nom d'utilisateur Twitter :",
+  "maxWords": "maximum de {{ number }} mots"
 }
