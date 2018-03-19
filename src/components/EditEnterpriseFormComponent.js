@@ -39,6 +39,8 @@ class EditEnterpriseFormComponent extends React.Component {
     this.handleDeleteEnterprise = this.handleDeleteEnterprise.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
     this.handleTabSelect = this.handleTabSelect.bind(this);
+    this.handlePublishEnterprise = this.handlePublishEnterprise.bind(this);
+    this.handleUnpublishEnterprise = this.handleUnpublishEnterprise.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -75,7 +77,8 @@ class EditEnterpriseFormComponent extends React.Component {
 
     const panels = locales.map((locale) => {
       const enterprise = this.state.enterprise[locale.locale];
-      const enterpriseFormFields = <EnterpriseFormFields enterprise={enterprise} locale={locale.locale} updateParent={this.handleFormChange} />
+      const enterpriseFormFields = <EnterpriseFormFields enterprise={enterprise}
+                                     locale={locale.locale} updateParent={this.handleFormChange} />
 
       return (
         <TabPanel key={'enterprise-' + locale.locale}>
@@ -87,6 +90,63 @@ class EditEnterpriseFormComponent extends React.Component {
     });
 
     return panels;
+  }
+
+  handleUnpublishEnterprise() {
+    const apiRoot = this.context.config.api_root;
+    const enterprise = this.state.enterprise;
+    const { t } = this.props;
+
+    let backendEnterprise = {
+      en: enterprise.en,
+      fr: enterprise.fr,
+      locations: enterprise.locations
+    }
+
+    api.unpublishEnterprise(apiRoot, enterprise.id, backendEnterprise)
+      .then( () => {
+        browserHistory.push('/admin');
+      })
+      .catch(error => {
+          const errorModal = (
+            <ModalError clearError={this.clearModalError}>
+              {t('common:enterpriseEditError')} "{error.message}"
+            </ModalError>
+          );
+
+          this.setState({
+            error: errorModal
+          });
+      });
+  }
+
+  handlePublishEnterprise() {
+    const apiRoot = this.context.config.api_root;
+    const enterprise = this.state.enterprise;
+    const enterpriseStatus = this.state.enterpriseStatus;
+    const { t } = this.props;
+
+    let backendEnterprise = {
+      en: enterprise.en,
+      fr: enterprise.fr,
+      locations: enterprise.locations
+    }
+
+    api.publishEnterprise(apiRoot, enterprise.id, enterpriseStatus, backendEnterprise)
+      .then( () => {
+        browserHistory.push('/admin');
+      })
+      .catch(error => {
+          const errorModal = (
+            <ModalError clearError={this.clearModalError}>
+              {t('common:enterpriseEditError')} "{error.message}"
+            </ModalError>
+          );
+
+          this.setState({
+            error: errorModal
+          });
+      });
   }
 
   handleTabSelect(index) {
@@ -186,11 +246,28 @@ class EditEnterpriseFormComponent extends React.Component {
 
   formButtons() {
     let jsx = null;
+    let extraButtons = null;
+
     const { t } = this.props;
+    const enterpriseStatus = this.state.enterpriseStatus;
+
+    if ( enterpriseStatus === 'unpublished' || enterpriseStatus ===  'pending' ) {
+      extraButtons = (
+        <input className='button button--default' name='publish' onClick={this.handlePublishEnterprise}
+          type='button' value={t('editEnterpriseForm:publish')} />
+      );
+    } else if ( enterpriseStatus === 'published' ) {
+      extraButtons = (
+        <input className='button button--default' name='unpublish' onClick={this.handleUnpublishEnterprise}
+          type='button' value={t('editEnterpriseForm:unpublish')} />
+      );
+    }
 
     if ( this.state.selectedTab !== 2 ) {
       jsx = (
         <div>
+          {extraButtons}
+
           <input className='button button--primary' type='submit' value={t('editEnterpriseForm:save')} />
 
           <input className='button button--destructive' name='delete'

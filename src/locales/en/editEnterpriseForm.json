@@ -6,5 +6,7 @@
   "thisCannotBeUndone": "This cannot be undone.",
   "areYouSureProceed": "Are you sure you'd like to proceed?",
   "cancel": "Cancel",
-  "settings": "Settings"
+  "settings": "Settings",
+  "publish": "Publish",
+  "unpublish": "Unpublish"
 }

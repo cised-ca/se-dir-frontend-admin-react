@@ -43,6 +43,20 @@ const api = {
       });
   },
 
+  unpublishEnterprise: function(apiRoot, enterpriseId, enterprise) {
+    const p1 = this.editEnterprise(apiRoot, enterpriseId, 'unpublished', enterprise);
+    const p2 = this.deleteEnterprise(apiRoot, enterpriseId, 'published');
+
+    return Promise.all([p1, p2]);
+  },
+
+  publishEnterprise: function(apiRoot, enterpriseId, status, enterprise) {
+    const p1 = this.editEnterprise(apiRoot, enterpriseId, 'published', enterprise);
+    const p2 = this.deleteEnterprise(apiRoot, enterpriseId, status);
+
+    return Promise.all([p1, p2]);
+  },
+
   getDirectoryAdministrators: function(apiRoot) {
     const url = apiRoot + '/directoryAdmin';
 
@@ -328,8 +342,8 @@ const api = {
   editEnterprise: function(apiRoot, enterpriseId, enterpriseStatus, enterprise) {
     let url = apiRoot + '/enterprise/' + enterpriseId;
 
-    if ( enterpriseStatus ) {
-      url += '/' + enterpriseStatus;
+    if ( enterpriseStatus  && enterpriseStatus !==  'published') {
+      url += '/' + getEndpointFromStatus(enterpriseStatus);
     }
 
     let headers = new Headers();

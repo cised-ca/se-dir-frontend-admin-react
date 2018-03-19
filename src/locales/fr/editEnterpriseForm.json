@@ -6,5 +6,7 @@
   "thisCannotBeUndone": "Cette action ne peut pas être annulée",
   "areYouSureProceed": "Êtes-vous sûr de vouloir continuer?",
   "cancel": "Annuler",
-  "settings": "Paramètres"
+  "settings": "Paramètres",
+  "publish": "Publier",
+  "unpublish": "Dépublier"
 }
