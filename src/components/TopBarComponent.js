@@ -21,7 +21,7 @@ class TopBarComponent extends React.Component {
             <li className="nav__item" key="CreateEnterprise">
               <Link className="nav__link" to="/admin/create">{t('topBar:createEnterprise')}</Link>
             </li>
-            <li className="nav__item" key="DirectoryAdmins">
+            <li className="nav__item admin-feature admin-feature--flex" key="DirectoryAdmins">
               <Link className="nav__link" to="/admin/directory-admins">{t('topBar:directoryAdmins')}</Link>
             </li>
             <li className="nav__item" key="Account">
@@ -43,12 +43,19 @@ class TopBarComponent extends React.Component {
 
     return (
       <div className="topbar-component top-bar">
-        <header className="site-header">
+        <header className="site-header site-header--desktop">
           <h1 className="top-bar__title">
             <Link to="/admin">{t('topBar:adminDashboard')}</Link>
           </h1>
 
           {accountNav}
+        </header>
+
+        <header className="site-header site-header--mobile">
+          <details>
+            <summary><img className="nav-toggle" src="/images/bars.png" alt="Toggle site menu" title="Toggle site menu" /></summary>
+            {accountNav}
+          </details>
         </header>
       </div>
     );

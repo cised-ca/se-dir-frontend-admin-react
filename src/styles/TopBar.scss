@@ -1,13 +1,98 @@
+.site-header--desktop {
+  display: none;
+}
+
+.site-header--mobile {
+  display: block;
+
+  summary {
+    cursor: pointer;
+    padding: 15px 0;
+    text-align: center;
+  }
+
+  .nav__items {
+    display: block;
+    list-style-type: none;
+  }
+
+  .nav__item,
+  .nav__link,
+  .button--logout {
+    display: block;
+  }
+
+  .nav__link,
+  .button--logout {
+    padding: 12px 8px;
+  }
+
+  .button--logout {
+    text-align: left;
+    width: 100%;
+  }
+
+  .nav-toggle {
+    width: 24px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .site-header--desktop {
+    display: flex;
+  }
+
+  .site-header--mobile {
+    display: none;
+  }
+
+  .nav__item {
+    display: flex;
+  }
+
+  .nav__link {
+    align-items: center;
+    display: flex;
+  }
+
+  .nav--top {
+    align-items: stretch;
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .top-bar .nav__items {
+    align-items: stretch;
+    display: flex;
+  }
+
+  .nav__item--logout .logout-component {
+    display: flex;
+
+    .button--logout {
+      align-items: center;
+    }
+  }
+
+  .nav__link {
+    padding: 0 8px;
+  }
+
+  .top-bar__title {
+    padding: 15px 0 15px 8px;
+  }
+
+  .nav__item--logout .logout-component .button--logout {
+    padding: 0 8px;
+  }
+}
+
 .top-bar {
   $primary-color: #ff5c3e;
   $primary-color-dark: #de5138; // Darker color for hover/active states
 
-  .site-header {
-    display: flex;
-  }
-
   background: $primary-color;
-  padding: 0 10px;
 
   header {
     overflow: hidden;
@@ -18,7 +103,6 @@
     flex: 1;
     float: left;
     margin: 0;
-    padding: 15px 0;
 
     a[href] {
       color: #fff;
@@ -31,45 +115,21 @@
     }
   }
 
-  .nav--top {
-    align-items: stretch;
-    display: flex;
-    flex: 1;
-    justify-content: flex-end;
-  }
-
   .nav__items {
-    align-items: stretch;
-    display: flex;
     margin: 0;
     padding: 0;
   }
 
-  .nav__item {
-    display: flex;
-  }
-
-  .nav__item--logout .logout-component {
-      display: flex;
-
-      .button--logout {
-        align-items: center;
-        display: flex;
-        padding: 0 8px;
-
-        &:focus,
-        &:hover {
-          background: $primary-color-dark;
-        }
+  .nav__item--logout .logout-component .button--logout {
+      &:focus,
+      &:hover {
+        background: $primary-color-dark;
       }
   }
 
   .nav__link {
-    align-items: center;
-    display: flex;
     font-family: "helvetica-black";
     font-weight: 400;
-    padding: 0 8px;
     text-decoration: none;
     text-transform: uppercase;
 

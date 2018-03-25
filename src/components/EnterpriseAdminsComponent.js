@@ -74,7 +74,7 @@ class EnterpriseAdminsComponent extends React.Component {
       })
       .catch(error => {
         const errorModal = (
-          <ModalError>
+          <ModalError isOpen={true}>
             <p>{error.message}</p>
           </ModalError>
         );
