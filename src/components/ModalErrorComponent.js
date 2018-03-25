@@ -20,14 +20,22 @@ class ModalErrorComponent extends React.Component {
     this.closeModal = this.closeModal.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isOpen !== this.state.modalIsOpen) {
+      this.setState({
+        modalIsOpen: nextProps.isOpen
+      });
+    }
+  }
+
   closeModal() {
     if (this.props.clearError) {
       this.props.clearError();
     }
 
-    /*this.setState({
+    this.setState({
       modalIsOpen: false
-  }); */
+    });
   }
 
   render() {
