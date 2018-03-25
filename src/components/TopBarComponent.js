@@ -21,7 +21,7 @@ class TopBarComponent extends React.Component {
             <li className="nav__item" key="CreateEnterprise">
               <Link className="nav__link" to="/admin/create">{t('topBar:createEnterprise')}</Link>
             </li>
-            <li className="nav__item" key="DirectoryAdmins">
+            <li className="nav__item admin-feature admin-feature--flex" key="DirectoryAdmins">
               <Link className="nav__link" to="/admin/directory-admins">{t('topBar:directoryAdmins')}</Link>
             </li>
             <li className="nav__item" key="Account">

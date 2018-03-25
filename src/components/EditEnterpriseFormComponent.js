@@ -253,13 +253,13 @@ class EditEnterpriseFormComponent extends React.Component {
 
     if ( enterpriseStatus === 'unpublished' || enterpriseStatus ===  'pending' ) {
       extraButtons = (
-        <input className='button button--default' name='publish' onClick={this.handlePublishEnterprise}
-          type='button' value={t('editEnterpriseForm:publish')} />
+        <input className='button button--default admin-feature admin-feature--inline-block' name='publish'
+          onClick={this.handlePublishEnterprise} type='button' value={t('editEnterpriseForm:publish')} />
       );
     } else if ( enterpriseStatus === 'published' ) {
       extraButtons = (
-        <input className='button button--default' name='unpublish' onClick={this.handleUnpublishEnterprise}
-          type='button' value={t('editEnterpriseForm:unpublish')} />
+        <input className='button button--default admin-feature admin-feature--inline-block' name='unpublish'
+          onClick={this.handleUnpublishEnterprise} type='button' value={t('editEnterpriseForm:unpublish')} />
       );
     }
 
@@ -270,9 +270,9 @@ class EditEnterpriseFormComponent extends React.Component {
 
           <input className='button button--primary' type='submit' value={t('editEnterpriseForm:save')} />
 
-          <input className='button button--destructive' name='delete'
-            onClick={this.handleDeleteEnterprise}
-            type='button' value={t('editEnterpriseForm:delete')} />
+          <input className='button button--destructive admin-feature admin-feature--inline-block'
+            name='delete' onClick={this.handleDeleteEnterprise} type='button'
+            value={t('editEnterpriseForm:delete')} />
         </div>
       );
     }

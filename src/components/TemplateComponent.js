@@ -6,6 +6,8 @@ import i18n from '../i18n';
 import TopBar from './TopBarComponent';
 import Loading from './LoadingComponent';
 
+import api from '../api/api.js';
+
 const airbrakeJs = require('airbrake-js');
 
 require('es6-promise/auto');
@@ -113,6 +115,15 @@ class TemplateComponent extends React.Component {
           },
           app.setupErrorLogger
         );
+
+        api.getPermissions(config.api_root)
+          .then((data) => {
+            if (data.directoryAdmin === true) {
+              app.setState({
+                userIsDirectoryAdmin: true
+              });
+            }
+          } );
       })
       .catch(function(reason) {
         app.state.logger.notify(reason);
@@ -121,6 +132,11 @@ class TemplateComponent extends React.Component {
 
   render() {
     let jsx;
+    let templateClassNames = 'template-component template';
+
+    if (this.state.userIsDirectoryAdmin === true) {
+      templateClassNames += ' user-is-admin';
+    }
 
     if (this.state.config === null) {
       jsx = (<Loading />);
@@ -128,7 +144,7 @@ class TemplateComponent extends React.Component {
       let childWithProps = React.cloneElement(this.props.children, this.state);
 
       jsx = (
-        <div className="template-component template">
+        <div className={templateClassNames}>
           <TopBar isLoggedIn={this.state.isLoggedIn} setLoggedIn={this.state.setLoggedIn} />
 
           <main className="template__main">
