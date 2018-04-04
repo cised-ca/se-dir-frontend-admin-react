@@ -11,6 +11,10 @@
     text-align: center;
   }
 
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
   .nav__items {
     display: block;
     list-style-type: none;

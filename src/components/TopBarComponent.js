@@ -18,7 +18,7 @@ class TopBarComponent extends React.Component {
       jsx = (
         <nav className="nav nav--top">
           <ul className="nav__items">
-            <li className="nav__item" key="CreateEnterprise">
+            <li className="nav__item admin-feature admin-feature--flex" key="CreateEnterprise">
               <Link className="nav__link" to="/admin/create">{t('topBar:createEnterprise')}</Link>
             </li>
             <li className="nav__item admin-feature admin-feature--flex" key="DirectoryAdmins">
@@ -53,7 +53,7 @@ class TopBarComponent extends React.Component {
 
         <header className="site-header site-header--mobile">
           <details>
-            <summary><img className="nav-toggle" src="/images/bars.png" alt="Toggle site menu" title="Toggle site menu" /></summary>
+            <summary><img className="nav-toggle" src="/admin/images/bars.png" alt="Toggle site menu" title="Toggle site menu" /></summary>
             {accountNav}
           </details>
         </header>
