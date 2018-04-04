@@ -1,3 +1,11 @@
+.user-is-admin .non-admin-buttons {
+  display: none;
+}
+
+.non-admin-buttons {
+  display: block;
+}
+
 .button {
   background: none;
   border: 0;

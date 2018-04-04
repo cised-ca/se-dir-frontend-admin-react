@@ -8,5 +8,6 @@
   "cancel": "Cancel",
   "settings": "Settings",
   "publish": "Publish",
-  "unpublish": "Unpublish"
+  "unpublish": "Unpublish",
+  "submitForApproval": "Submit changes for approval"
 }

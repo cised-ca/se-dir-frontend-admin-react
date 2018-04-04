@@ -41,6 +41,7 @@ class EditEnterpriseFormComponent extends React.Component {
     this.handleTabSelect = this.handleTabSelect.bind(this);
     this.handlePublishEnterprise = this.handlePublishEnterprise.bind(this);
     this.handleUnpublishEnterprise = this.handleUnpublishEnterprise.bind(this);
+    this.handlePendingEnterprise = this.handlePendingEnterprise.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -95,13 +96,17 @@ class EditEnterpriseFormComponent extends React.Component {
     });
 
     if (this.state.enterpriseStatus === 'published') {
-     panels.push( <TabPanel>
-        <h1>{t('editEnterpriseForm:settings')}</h1>
+      panels.push(
+        <TabPanel>
+          <div className='admin-feature'>
+            <h1>{t('editEnterpriseForm:settings')}</h1>
 
-        <UploadLogo enterpriseId={this.state.enterprise.id} />
+            <UploadLogo enterpriseId={this.state.enterprise.id} />
+          </div>
 
-        <EnterpriseAdmins enterpriseId={this.state.enterprise.id} />
-      </TabPanel>);
+          <EnterpriseAdmins enterpriseId={this.state.enterprise.id} />
+        </TabPanel>
+      );
     }
 
     return panels;
@@ -181,8 +186,8 @@ class EditEnterpriseFormComponent extends React.Component {
     event.preventDefault();
 
     const apiRoot = this.context.config.api_root;
-    const enterpriseStatus = this.state.enterpriseStatus;
     const enterprise = this.state.enterprise;
+    const enterpriseStatus = this.state.enterpriseStatus;
     let updatedEnterprise = {};
 
     const locales = this.context.config.locales;
@@ -206,6 +211,38 @@ class EditEnterpriseFormComponent extends React.Component {
           this.setState({
             flashMessage: flashMessage
           });
+      })
+      .catch(error => {
+          const errorModal = (
+            <ModalError clearError={this.clearModalError}>
+              {t('common:enterpriseEditError')} "{error.message}"
+            </ModalError>
+          );
+
+          this.setState({
+            error: errorModal
+          });
+      });
+  }
+
+  handlePendingEnterprise() {
+    const apiRoot = this.context.config.api_root;
+    const enterprise = this.state.enterprise;
+    let updatedEnterprise = {};
+
+    const locales = this.context.config.locales;
+    locales.map((locale) => {
+      updatedEnterprise[locale.locale] = enterprise[locale.locale];
+    });
+
+    const { t } = this.props;
+
+    // TODO
+    // updatedEnterprise.locations = enterprise.locations || [];
+
+    api.editEnterprise(apiRoot, enterprise.id, 'pending', updatedEnterprise)
+      .then(() => {
+        browserHistory.push('/admin');
       })
       .catch(error => {
           const errorModal = (
@@ -262,6 +299,7 @@ class EditEnterpriseFormComponent extends React.Component {
   formButtons() {
     let jsx = null;
     let extraButtons = null;
+    let nonAdminButtons = null;
 
     const { t } = this.props;
     const enterpriseStatus = this.state.enterpriseStatus;
@@ -273,21 +311,39 @@ class EditEnterpriseFormComponent extends React.Component {
       );
     } else if ( enterpriseStatus === 'published' ) {
       extraButtons = (
-        <input className='button button--default admin-feature admin-feature--inline-block' name='unpublish'
+        <input className='button button--default' name='unpublish'
           onClick={this.handleUnpublishEnterprise} type='button' value={t('editEnterpriseForm:unpublish')} />
+      );
+    }
+
+    if (enterpriseStatus !== 'pending') {
+      nonAdminButtons = (
+        <input className='button button--primary' name='pending' onClick={this.handlePendingEnterprise}
+          type='button' value={t('editEnterpriseForm:submitForApproval')} />
+      );
+    } else {
+      nonAdminButtons = (
+        <input className='button button--primary' type='button' onClick={this.handlePendingEnterprise}
+          value={t('editEnterpriseForm:save')} />
       );
     }
 
     if ( this.state.selectedTab !== 2 ) {
       jsx = (
         <div>
-          {extraButtons}
+          <div className='admin-feature'>
+            {extraButtons}
 
-          <input className='button button--primary' type='submit' value={t('editEnterpriseForm:save')} />
+            <input className='button button--primary' type='submit' value={t('editEnterpriseForm:save')} />
 
-          <input className='button button--destructive admin-feature admin-feature--inline-block'
-            name='delete' onClick={this.handleDeleteEnterprise} type='button'
-            value={t('editEnterpriseForm:delete')} />
+            <input className='button button--destructive'
+              name='delete' onClick={this.handleDeleteEnterprise} type='button'
+              value={t('editEnterpriseForm:delete')} />
+          </div>
+
+          <div className='non-admin-buttons'>
+            {nonAdminButtons}
+          </div>
         </div>
       );
     }
