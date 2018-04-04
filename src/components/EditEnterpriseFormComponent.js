@@ -69,11 +69,16 @@ class EditEnterpriseFormComponent extends React.Component {
       );
     });
 
+    if (this.state.enterpriseStatus === 'published') {
+      tabs.push(<Tab>{t('editEnterpriseForm:settings')}</Tab>);
+    }
+
     return tabs;
   }
 
   fillTabPanels() {
     const locales = this.context.config.locales;
+    const { t } = this.props;
 
     const panels = locales.map((locale) => {
       const enterprise = this.state.enterprise[locale.locale];
@@ -88,6 +93,16 @@ class EditEnterpriseFormComponent extends React.Component {
         </TabPanel>
       );
     });
+
+    if (this.state.enterpriseStatus === 'published') {
+     panels.push( <TabPanel>
+        <h1>{t('editEnterpriseForm:settings')}</h1>
+
+        <UploadLogo enterpriseId={this.state.enterprise.id} />
+
+        <EnterpriseAdmins enterpriseId={this.state.enterprise.id} />
+      </TabPanel>);
+    }
 
     return panels;
   }
@@ -326,18 +341,10 @@ class EditEnterpriseFormComponent extends React.Component {
           <Tabs selectedIndex={this.state.selectedTab} onSelect={this.handleTabSelect}>
             <TabList>
               {tabs}
-              <Tab>{t('editEnterpriseForm:settings')}</Tab>
             </TabList>
 
             {panels}
 
-            <TabPanel>
-              <h1>{t('editEnterpriseForm:settings')}</h1>
-
-              <UploadLogo enterpriseId={this.state.enterprise.id} />
-
-              <EnterpriseAdmins enterpriseId={this.state.enterprise.id} />
-            </TabPanel>
           </Tabs>
 
           {buttons}
