@@ -5,8 +5,8 @@
   "yearStarted": "Année de fondation :",
   "offering": "Offres :",
   "purpose": "Objectif:",
-  "purposeOptions": [
-    "lnclusion sociale",
+  "purposeOptions-fr": [
+    "Inclusion sociale",
     "Sécurité alimentaire et la lutte contre la faim",
     "Arts et Culture",
     "Environnement",
@@ -14,6 +14,16 @@
     "Formation professionnelle pour les nouveaux canadiens",
     "Formation professionnelle pour des individus marginalisés par le marché de l'emploi",
     "Génèrer des revenus pour l’organisation mère"
+  ],
+  "purposeOptions-en": [
+    "Social Inclusion",
+    "Food Security & Hunger Alleviation",
+    "Arts & Culture",
+    "Environmental",
+    "Real Estate/Property Maintenance",
+    "Work Skills Training for New Canadians",
+    "Work Skills Training for Hard-to-Employ Individuals",
+    "Generate Income for a Parent Organization"
   ],
   "website": "Site web :",
   "facebookUsername": "Nom d'utilisateur Facebook :",

@@ -121,7 +121,10 @@ class EnterpriseFormFieldsComponent extends React.Component {
 		const { t } = this.props;
 
 		let enterprisePurposes = this.state.enterprise.purposes || [];
-    let purposeOptions = t('enterpriseFormFields:purposeOptions', { returnObjects: true });
+    let purposeOptions = t(
+      'enterpriseFormFields:purposeOptions-' + this.state.locale,
+      { returnObjects: true }
+    );
 
     if (!purposeOptions) {
       return;
