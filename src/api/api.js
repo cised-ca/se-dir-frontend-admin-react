@@ -343,7 +343,7 @@ const api = {
     let url = apiRoot + '/enterprise/' + enterpriseId;
 
     if ( enterpriseStatus  && enterpriseStatus !==  'published') {
-      url += '/' + getEndpointFromStatus(enterpriseStatus);
+      url += getEndpointFromStatus(enterpriseStatus);
     }
 
     let headers = new Headers();
