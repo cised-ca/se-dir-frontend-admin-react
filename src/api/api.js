@@ -449,7 +449,7 @@ const api = {
                   message: 'Postal code not found'
                 });
               } else {
-                return response.json();
+                return Promise.resolve(JSON.parse(text));
               }
             });
         }
