@@ -8,5 +8,12 @@
   "cancel": "Cancel",
   "settings": "Settings",
   "publish": "Publish",
-  "unpublish": "Unpublish"
+  "unpublish": "Unpublish",
+  "submitForApproval": "Submit changes for approval",
+  "locations": "Locations",
+  "addLocation": "Add location",
+  "addNewLocation": "Add a new location",
+  "locationCode": "(the first three characters of your postal code)",
+  "postalCodeNotFound": "Postal code not found"
 }
+

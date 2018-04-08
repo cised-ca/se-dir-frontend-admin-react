@@ -9,6 +9,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.scss';
 
 import EnterpriseFormFields from './EnterpriseFormFieldsComponent';
+import EnterpriseMap from './EnterpriseMapComponent';
 import UploadLogo from './UploadLogoComponent';
 import EnterpriseAdmins from './EnterpriseAdminsComponent';
 import FlashMessage from './FlashMessageComponent';
@@ -41,6 +42,10 @@ class EditEnterpriseFormComponent extends React.Component {
     this.handleTabSelect = this.handleTabSelect.bind(this);
     this.handlePublishEnterprise = this.handlePublishEnterprise.bind(this);
     this.handleUnpublishEnterprise = this.handleUnpublishEnterprise.bind(this);
+    this.handlePendingEnterprise = this.handlePendingEnterprise.bind(this);
+    this.handleLocationChange = this.handleLocationChange.bind(this);
+    this.handleLocationSubmit = this.handleLocationSubmit.bind(this);
+    this.deleteLocation = this.deleteLocation.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,6 +64,54 @@ class EditEnterpriseFormComponent extends React.Component {
     });
   }
 
+  handleLocationChange(event) {
+    const target = event.target;
+
+    let value = target.value;
+
+    if (!value) {
+      value = '';
+    }
+
+    this.setState({newLocation: value});
+  }
+
+  handleLocationSubmit() {
+    const apiRoot = this.context.config.geo_api_root;
+    const { t } = this.props;
+    let newLocation = this.state.newLocation;
+
+    if (newLocation) {
+      newLocation = newLocation.toUpperCase();
+
+      api.getLatLonFromPostalCode(apiRoot, newLocation)
+        .then((locationDetails) => {
+          const lat = locationDetails.latitude;
+          const lon = locationDetails.longitude;
+          const coords = [parseFloat(lon), parseFloat(lat)];
+
+          this.submitForm(coords);
+        })
+        .catch((error) => {
+          let errorMessage = error.message;
+
+          if (error.status === 404) {
+            errorMessage = t('editEnterpriseFormComponent:postalCodeNotFound');
+          }
+
+          const errorModal = (
+            <ModalError clearError={this.clearModalError}>
+              {t('common:enterpriseEditError')} "{errorMessage}"
+            </ModalError>
+          );
+
+          this.setState({
+            error: errorModal
+          });
+        });
+    }
+  }
+
   fillTabList() {
     const locales = this.context.config.locales;
     const { t } = this.props;
@@ -69,11 +122,56 @@ class EditEnterpriseFormComponent extends React.Component {
       );
     });
 
+    if (this.state.enterpriseStatus === 'published') {
+      tabs.push(<Tab>{t('editEnterpriseForm:settings')}</Tab>);
+    }
+
     return tabs;
+  }
+
+  deleteLocation(index) {
+    this.state.enterprise.locations.coordinates.splice(index, 1);
+
+    this.submitForm();
+  }
+
+  buildLocations() {
+    const { t } = this.props;
+    let newLocation = this.state.newLocation || '';
+
+    let jsx = (
+      <div className='admin-feature locations'>
+        <h2>{t('editEnterpriseForm:locations')}</h2>
+
+        <div className='locations__map'>
+          <EnterpriseMap enterprise={this.state.enterprise} deleteLocation={this.deleteLocation} redrawMap={this.state.redrawMap} />
+        </div>
+
+        <div className='locations__new'>
+          <label>{t('editEnterpriseForm:addNewLocation')}<br />
+            {t('editEnterpriseForm:locationCode')}<br />
+
+            <input type='text'
+              name='newLocation'
+              onChange={this.handleLocationChange}
+              placeholder='K2K'
+              maxLength='3'
+              value={newLocation} />
+          </label>
+
+          <input className='button button--primary' name='addLocation'
+            onClick={this.handleLocationSubmit} type='button' value={t('editEnterpriseForm:addLocation')} />
+        </div>
+      </div>
+    );
+
+    return jsx;
   }
 
   fillTabPanels() {
     const locales = this.context.config.locales;
+    const { t } = this.props;
+    const locations = this.buildLocations();
 
     const panels = locales.map((locale) => {
       const enterprise = this.state.enterprise[locale.locale];
@@ -88,6 +186,22 @@ class EditEnterpriseFormComponent extends React.Component {
         </TabPanel>
       );
     });
+
+    if (this.state.enterpriseStatus === 'published') {
+      panels.push(
+        <TabPanel>
+          <div className='admin-feature'>
+            <h1>{t('editEnterpriseForm:settings')}</h1>
+
+            <UploadLogo enterpriseId={this.state.enterprise.id} />
+          </div>
+
+          {locations}
+
+          <EnterpriseAdmins enterpriseId={this.state.enterprise.id} />
+        </TabPanel>
+      );
+    }
 
     return panels;
   }
@@ -150,8 +264,15 @@ class EditEnterpriseFormComponent extends React.Component {
   }
 
   handleTabSelect(index) {
+    let redrawMap = false;
+
+    if (index === 2) {
+      redrawMap = true;
+    }
+
     this.setState({
-      'selectedTab': index
+      'selectedTab': index,
+      'redrawMap': redrawMap
     });
   }
 
@@ -165,8 +286,55 @@ class EditEnterpriseFormComponent extends React.Component {
   handleSubmitForm(event) {
     event.preventDefault();
 
+    this.submitForm();
+  }
+
+  submitForm(newLocation) {
+    const { t } = this.props;
     const apiRoot = this.context.config.api_root;
+    const enterprise = this.state.enterprise;
     const enterpriseStatus = this.state.enterpriseStatus;
+    let updatedEnterprise = {};
+
+    updatedEnterprise.locations = enterprise.locations;
+
+    if (newLocation) {
+      updatedEnterprise.locations.coordinates.push(newLocation);
+    }
+
+    const locales = this.context.config.locales;
+    locales.map((locale) => {
+      updatedEnterprise[locale.locale] = enterprise[locale.locale];
+    });
+
+    api.editEnterprise(apiRoot, enterprise.id, enterpriseStatus, updatedEnterprise)
+      .then(() => {
+          const flashMessage = (
+            <FlashMessage type="success">
+              {t('common:enterpriseEditSucess')}
+            </FlashMessage>
+          );
+
+          this.setState({
+            flashMessage: flashMessage,
+            newLocation: null
+          });
+      })
+      .catch(error => {
+          const errorModal = (
+            <ModalError clearError={this.clearModalError}>
+              {t('common:enterpriseEditError')} "{error.message}"
+            </ModalError>
+          );
+
+          this.setState({
+            error: errorModal
+          });
+      });
+  }
+
+  handlePendingEnterprise() {
+    const apiRoot = this.context.config.api_root;
     const enterprise = this.state.enterprise;
     let updatedEnterprise = {};
 
@@ -180,17 +348,9 @@ class EditEnterpriseFormComponent extends React.Component {
     // TODO
     // updatedEnterprise.locations = enterprise.locations || [];
 
-    api.editEnterprise(apiRoot, enterprise.id, enterpriseStatus, updatedEnterprise)
+    api.editEnterprise(apiRoot, enterprise.id, 'pending', updatedEnterprise)
       .then(() => {
-          const flashMessage = (
-            <FlashMessage type="success">
-              {t('common:enterpriseEditSucess')}
-            </FlashMessage>
-          );
-
-          this.setState({
-            flashMessage: flashMessage
-          });
+        browserHistory.push('/admin');
       })
       .catch(error => {
           const errorModal = (
@@ -247,6 +407,7 @@ class EditEnterpriseFormComponent extends React.Component {
   formButtons() {
     let jsx = null;
     let extraButtons = null;
+    let nonAdminButtons = null;
 
     const { t } = this.props;
     const enterpriseStatus = this.state.enterpriseStatus;
@@ -258,21 +419,39 @@ class EditEnterpriseFormComponent extends React.Component {
       );
     } else if ( enterpriseStatus === 'published' ) {
       extraButtons = (
-        <input className='button button--default admin-feature admin-feature--inline-block' name='unpublish'
+        <input className='button button--default' name='unpublish'
           onClick={this.handleUnpublishEnterprise} type='button' value={t('editEnterpriseForm:unpublish')} />
+      );
+    }
+
+    if (enterpriseStatus !== 'pending') {
+      nonAdminButtons = (
+        <input className='button button--primary' name='pending' onClick={this.handlePendingEnterprise}
+          type='button' value={t('editEnterpriseForm:submitForApproval')} />
+      );
+    } else {
+      nonAdminButtons = (
+        <input className='button button--primary' type='button' onClick={this.handlePendingEnterprise}
+          value={t('editEnterpriseForm:save')} />
       );
     }
 
     if ( this.state.selectedTab !== 2 ) {
       jsx = (
         <div>
-          {extraButtons}
+          <div className='admin-feature'>
+            {extraButtons}
 
-          <input className='button button--primary' type='submit' value={t('editEnterpriseForm:save')} />
+            <input className='button button--primary' type='submit' value={t('editEnterpriseForm:save')} />
 
-          <input className='button button--destructive admin-feature admin-feature--inline-block'
-            name='delete' onClick={this.handleDeleteEnterprise} type='button'
-            value={t('editEnterpriseForm:delete')} />
+            <input className='button button--destructive'
+              name='delete' onClick={this.handleDeleteEnterprise} type='button'
+              value={t('editEnterpriseForm:delete')} />
+          </div>
+
+          <div className='non-admin-buttons'>
+            {nonAdminButtons}
+          </div>
         </div>
       );
     }
@@ -326,18 +505,10 @@ class EditEnterpriseFormComponent extends React.Component {
           <Tabs selectedIndex={this.state.selectedTab} onSelect={this.handleTabSelect}>
             <TabList>
               {tabs}
-              <Tab>{t('editEnterpriseForm:settings')}</Tab>
             </TabList>
 
             {panels}
 
-            <TabPanel>
-              <h1>{t('editEnterpriseForm:settings')}</h1>
-
-              <UploadLogo enterpriseId={this.state.enterprise.id} />
-
-              <EnterpriseAdmins enterpriseId={this.state.enterprise.id} />
-            </TabPanel>
           </Tabs>
 
           {buttons}
