@@ -66,7 +66,7 @@ class AccountPageComponent extends React.Component {
       this.state.authenticatedEnterprises.map(function(enterprise) {
         return (
           <li className='permission-item' key={enterprise.id}>{enterprise.name || 'ID: ' + enterprise.id}
-            <Link className="edit-enterprise" to={'/enterprise/' + enterprise.id}>{t('accountPage:edit')}</Link>
+            <Link className="edit-enterprise" to={'/admin/dashboard'}>{t('accountPage:edit')}</Link>
           </li>
         );
       })
