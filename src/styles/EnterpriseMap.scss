@@ -1,0 +1,15 @@
+.enterprisemap-component {
+
+  .leaflet-container {
+    height: 400px;
+    max-width: 800px;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .delete-location {
+    color: #ff5c3e;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}

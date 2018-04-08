@@ -1,3 +1,16 @@
+.editenterpriseform-component {
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  input,
+  textarea {
+    font-weight: normal;
+  }
+}
+
 .user-is-admin .non-admin-buttons {
   display: none;
 }

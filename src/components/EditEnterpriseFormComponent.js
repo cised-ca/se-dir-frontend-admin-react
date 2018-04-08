@@ -9,6 +9,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.scss';
 
 import EnterpriseFormFields from './EnterpriseFormFieldsComponent';
+import EnterpriseMap from './EnterpriseMapComponent';
 import UploadLogo from './UploadLogoComponent';
 import EnterpriseAdmins from './EnterpriseAdminsComponent';
 import FlashMessage from './FlashMessageComponent';
@@ -42,6 +43,9 @@ class EditEnterpriseFormComponent extends React.Component {
     this.handlePublishEnterprise = this.handlePublishEnterprise.bind(this);
     this.handleUnpublishEnterprise = this.handleUnpublishEnterprise.bind(this);
     this.handlePendingEnterprise = this.handlePendingEnterprise.bind(this);
+    this.handleLocationChange = this.handleLocationChange.bind(this);
+    this.handleLocationSubmit = this.handleLocationSubmit.bind(this);
+    this.deleteLocation = this.deleteLocation.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -58,6 +62,54 @@ class EditEnterpriseFormComponent extends React.Component {
       this.setState({
         error: null
     });
+  }
+
+  handleLocationChange(event) {
+    const target = event.target;
+
+    let value = target.value;
+
+    if (!value) {
+      value = '';
+    }
+
+    this.setState({newLocation: value});
+  }
+
+  handleLocationSubmit() {
+    const apiRoot = this.context.config.geo_api_root;
+    const { t } = this.props;
+    let newLocation = this.state.newLocation;
+
+    if (newLocation) {
+      newLocation = newLocation.toUpperCase();
+
+      api.getLatLonFromPostalCode(apiRoot, newLocation)
+        .then((locationDetails) => {
+          const lat = locationDetails.latitude;
+          const lon = locationDetails.longitude;
+          const coords = [parseFloat(lon), parseFloat(lat)];
+
+          this.submitForm(coords);
+        })
+        .catch((error) => {
+          let errorMessage = error.message;
+
+          if (error.status === 404) {
+            errorMessage = t('editEnterpriseFormComponent:postalCodeNotFound');
+          }
+
+          const errorModal = (
+            <ModalError clearError={this.clearModalError}>
+              {t('common:enterpriseEditError')} "{errorMessage}"
+            </ModalError>
+          );
+
+          this.setState({
+            error: errorModal
+          });
+        });
+    }
   }
 
   fillTabList() {
@@ -77,9 +129,49 @@ class EditEnterpriseFormComponent extends React.Component {
     return tabs;
   }
 
+  deleteLocation(index) {
+    this.state.enterprise.locations.coordinates.splice(index, 1);
+
+    this.submitForm();
+  }
+
+  buildLocations() {
+    const { t } = this.props;
+    let newLocation = this.state.newLocation || '';
+
+    let jsx = (
+      <div className='admin-feature locations'>
+        <h2>{t('editEnterpriseForm:locations')}</h2>
+
+        <div className='locations__map'>
+          <EnterpriseMap enterprise={this.state.enterprise} deleteLocation={this.deleteLocation} redrawMap={this.state.redrawMap} />
+        </div>
+
+        <div className='locations__new'>
+          <label>{t('editEnterpriseForm:addNewLocation')}<br />
+            {t('editEnterpriseForm:locationCode')}<br />
+
+            <input type='text'
+              name='newLocation'
+              onChange={this.handleLocationChange}
+              placeholder='K2K'
+              maxLength='3'
+              value={newLocation} />
+          </label>
+
+          <input className='button button--primary' name='addLocation'
+            onClick={this.handleLocationSubmit} type='button' value={t('editEnterpriseForm:addLocation')} />
+        </div>
+      </div>
+    );
+
+    return jsx;
+  }
+
   fillTabPanels() {
     const locales = this.context.config.locales;
     const { t } = this.props;
+    const locations = this.buildLocations();
 
     const panels = locales.map((locale) => {
       const enterprise = this.state.enterprise[locale.locale];
@@ -103,6 +195,8 @@ class EditEnterpriseFormComponent extends React.Component {
 
             <UploadLogo enterpriseId={this.state.enterprise.id} />
           </div>
+
+          {locations}
 
           <EnterpriseAdmins enterpriseId={this.state.enterprise.id} />
         </TabPanel>
@@ -170,8 +264,15 @@ class EditEnterpriseFormComponent extends React.Component {
   }
 
   handleTabSelect(index) {
+    let redrawMap = false;
+
+    if (index === 2) {
+      redrawMap = true;
+    }
+
     this.setState({
-      'selectedTab': index
+      'selectedTab': index,
+      'redrawMap': redrawMap
     });
   }
 
@@ -185,20 +286,26 @@ class EditEnterpriseFormComponent extends React.Component {
   handleSubmitForm(event) {
     event.preventDefault();
 
+    this.submitForm();
+  }
+
+  submitForm(newLocation) {
+    const { t } = this.props;
     const apiRoot = this.context.config.api_root;
     const enterprise = this.state.enterprise;
     const enterpriseStatus = this.state.enterpriseStatus;
     let updatedEnterprise = {};
 
+    updatedEnterprise.locations = enterprise.locations;
+
+    if (newLocation) {
+      updatedEnterprise.locations.coordinates.push(newLocation);
+    }
+
     const locales = this.context.config.locales;
     locales.map((locale) => {
       updatedEnterprise[locale.locale] = enterprise[locale.locale];
     });
-
-    const { t } = this.props;
-
-    // TODO
-    // updatedEnterprise.locations = enterprise.locations || [];
 
     api.editEnterprise(apiRoot, enterprise.id, enterpriseStatus, updatedEnterprise)
       .then(() => {
@@ -209,7 +316,8 @@ class EditEnterpriseFormComponent extends React.Component {
           );
 
           this.setState({
-            flashMessage: flashMessage
+            flashMessage: flashMessage,
+            newLocation: null
           });
       })
       .catch(error => {

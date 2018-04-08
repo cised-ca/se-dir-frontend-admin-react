@@ -9,5 +9,11 @@
   "settings": "Paramètres",
   "publish": "Publier",
   "unpublish": "Dépublier",
-  "submitForApproval": "Soumettre pour approbation"
+  "submitForApproval": "Soumettre pour approbation",
+  "locations": "Emplacements",
+  "addLocation": "Ajouter l'emplacement",
+  "addNewLocation": "Ajouter un nouvel emplacement",
+  "locationCode": "(les trois premiers charactères de votre code postal)",
+  "postalCodeNotFound": "Code postal non-trouvé"
 }
+

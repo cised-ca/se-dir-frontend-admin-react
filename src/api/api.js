@@ -433,6 +433,38 @@ const api = {
         message: 'Unable to get enterprise summary: ' + error.message
       });
     });
+  },
+
+  getLatLonFromPostalCode: function(apiRoot, postalCode) {
+    const url = apiRoot + '/postalCodeLookup?postalCode=' + postalCode;
+
+    return fetch(url, {credentials: 'same-origin'})
+      .then((response) => {
+        if (response.ok) {
+          return response.text()
+            .then(text => {
+              if (text === '') {
+                return Promise.reject({
+                  status: 404,
+                  message: 'Postal code not found'
+                });
+              } else {
+                return response.json();
+              }
+            });
+        }
+
+        return Promise.reject({
+          status: response.status,
+          message: response.statusText
+        });
+      })
+      .catch(error => {
+        return Promise.reject({
+          status: undefined,
+          message: 'Unable to get coordinates for postal code: ' + error.message
+        });
+      });
   }
 };
 
